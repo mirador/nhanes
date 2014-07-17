@@ -1,0 +1,8 @@
+# NOTE: Dietary data is not included for the time being because some variables are 
+# double indexed by respondent and food codes and Mirador doesn't support that kind of 
+# situations yet.
+Demographics  demo.xml
+#Dietary       dietary.xml
+Examination   exam.xml
+Laboratory    lab.xml
+Questionnaire question.xml

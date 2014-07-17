@@ -1,0 +1,24 @@
+# Appendix 1. Sexual Behavior (SXQ) Data for Males in NHANES 2003-2010 Release Files
+# http://www.cdc.gov/nchs/nhanes/nhanes2009-2010/SXQ_F.htm#Appendix_1._Sexual_Behavior_%28SXQ%29_Data_for_Males_in_NHANES_2003-2010_Release_Files
+SXD031 SXD030
+SXD171 SXQ170
+SXD510 SXQ510 SXQ190 
+SXQ410 SXQ200
+SXQ550 SXQ220
+SXQ610 SXQ241
+SXQ251 SXQ250
+
+# Appendix 2. Sexual Behavior (SXQ) Data for Females in NHANES 2003-2010 Release Files
+# http://www.cdc.gov/nchs/nhanes/nhanes2009-2010/SXQ_F.htm#Appendix_2._Sexual_Behavior_%28SXQ%29_Data_for_Females_in_NHANES_2003-2010_Release_Files
+SXD021 SXQ021 SXQ020
+SXD031 SXD030
+SXD101 SXQ101 SXQ100
+SXD450 SXQ450 SXQ120
+SXQ490 SXQ150
+SXQ610 SXQ241
+SXQ251 SXQ250
+
+# Lab 13 Total Cholesterol and HDL Cholesterol Cross-Year Variable Tables
+# http://www.cdc.gov/nchs/nhanes/variable_tables/lab13.htm
+LBDHDD LBXHDD LBDHDL
+LBDHDDSI LBDHDLSI
