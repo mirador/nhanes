@@ -74,6 +74,11 @@ files that are removed by this step. The contents of the dataset folder are read
 from Mirador:
 python finishdataset.py 1999-2010
 
+If the temporary files are needed to redo merging operations, once can add the -keep 
+parameter:
+python finishdataset.py 1999-2010 -keep
+
+
 
 ADDING COMPOSITE VARIABLES
 ==========================

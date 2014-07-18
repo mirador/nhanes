@@ -29,7 +29,7 @@ sys.path.insert(0, module_path)
 
 module = import_module(module_filename)
 
-print "ADDING COMPOSITE " + module.name() + " TO MIRADOR DATASET IN " + mira_path + "..."
+print "ADDING COMPOSITE " + module.get_name() + " TO MIRADOR DATASET IN " + mira_path + "..."
 
 work_path = os.getcwd()
 
@@ -79,7 +79,7 @@ except AttributeError:
     
 with open(datafile1, "wb") as tsv:
     writer = csv.writer(tsv, dialect="excel-tab")
-    titles.append(module.name())
+    titles.append(module.get_name())
     writer.writerow(titles)
     
     for x in range(1, len(data)):
@@ -91,9 +91,9 @@ with open(datafile1, "wb") as tsv:
         writer.writerow(data[x])
 
 # Create dictionary entry for the composite variable
-dict_entry = [module.title()] 
-dict_entry.append(module.type())
-dict_entry.append(module.range())
+dict_entry = [module.get_title()] 
+dict_entry.append(module.get_type())
+dict_entry.append(module.get_range())
 if 0 < len(var_weights):
     # Adding weight variable
     weight = ''
@@ -137,16 +137,16 @@ if comp_group is  None:
 
 comp_table = None
 for table in comp_group.findall('table'):
-    if table.attrib['name'] == module.table():
+    if table.attrib['name'] == module.get_table():
         comp_table = table
         break
   
 if comp_table is None:
     comp_table = ET.SubElement(comp_group, "table")
-    comp_table.set("name", module.table())
+    comp_table.set("name", module.get_table())
 
 variable = ET.SubElement(comp_table, "variable")
-variable.set("name", module.name())
+variable.set("name", module.get_name())
 
 # Prettyfing XML string using BeautifulSoup and writing to file
 xml_soup = BeautifulSoup(ET.tostring(root), "xml")

@@ -16,21 +16,21 @@ def variables():
 
 The names must correspond to the original titles in the data file
 '''    
-def name():
+def get_name():
     return "Z"
 
 ''' Returns the title of the new composite variable
 
 The title is often a human-readable string describing the variable
 '''
-def title():
+def get_title():
     return "Sum of X and Y"
 
 ''' Returns a string with the data type for the variable
 
 The valid types are int, long, float, double, and category
 '''
-def type():
+def get_type():
     return "float"
 
 ''' Returns composite value given the values of the component variables
@@ -49,7 +49,7 @@ This range should be of the form "min,max" for numerical variables, and an enume
 all possible categories with their code:value pairs for category variables, as in:
 "0:male;1:female"
 '''    
-def range(): 
+def get_range(): 
     return "0,100"
 
 ''' Returns the table this composite should be put in, within the Composites group
@@ -57,5 +57,5 @@ def range():
 If this method is not modified, the composite will be put inside the default table 
 "All Composites"
 '''
-def table(): 
+def get_table(): 
     return "All Composites"

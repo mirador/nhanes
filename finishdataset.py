@@ -25,6 +25,10 @@ def load_workfiles():
   return workfiles
 
 cycle = sys.argv[1]
+keep_workfiles = False
+if len(sys.argv) == 3 and sys.argv[2] == '-keep':
+    keep_workfiles = True
+
 [year0, year1] = cycle.split("-")
 year_diff = int(year1) - int(year0)
 
@@ -36,15 +40,16 @@ error_filename = output_folder + "/error.out"
 
 print "PREPARING", cycle, "MIRADOR DATASET FOR RELEASE..."
 
-# Removing temporary work files...
-if os.path.isfile(output_filename):
-    os.remove(output_filename)
-if os.path.isfile(error_filename):
-    os.remove(error_filename)
-for work in workfiles:
-    work_filename = output_folder + "/" + work
-    if os.path.isfile(work_filename):
-        os.remove(work_filename)
+if not keep_workfiles:
+    # Removing temporary work files...
+    if os.path.isfile(output_filename):
+        os.remove(output_filename)
+    if os.path.isfile(error_filename):
+        os.remove(error_filename)
+    for work in workfiles:
+        work_filename = output_folder + "/" + work
+        if os.path.isfile(work_filename):
+            os.remove(work_filename)
 
 # Creating Mirador configuration file
 template_config = "config.mira"
