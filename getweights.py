@@ -15,7 +15,6 @@ The default is html.parser, the other ones (html5lib, lxml) need to be installed
 separately.
 
 @copyright: Fathom Information Design 2014
-@author: Andres Colubri
 '''
 
 import sys, os, csv, codecs, re

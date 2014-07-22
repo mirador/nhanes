@@ -5,7 +5,6 @@ It also generates the dictionary file with the type for each
 variable
 
 @copyright: Fathom Information Design 2014
-@author: Andres Colubri 
 '''
 
 import sys, os, csv, math

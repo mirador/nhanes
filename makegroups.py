@@ -2,7 +2,6 @@
 Creates the groups file from the input metadata
 
 @copyright: Fathom Information Design 2014
-@author: Andres Colubri 
 '''
 
 import sys, os, codecs

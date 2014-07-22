@@ -3,7 +3,6 @@ Calculates the merged weights according to the information stored in the list fi
 saves them to the csv file and creates the corresponding xml metadata.
 
 @copyright: Fathom Information Design 2014
-@author: Andres Colubri 
 '''
 
 import sys, os, csv, codecs

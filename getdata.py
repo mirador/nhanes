@@ -3,7 +3,6 @@ Downloads all the NHANES XPT files for a specific cycle, and converts them into 
 files for subsequent parsing. 
 
 @copyright: Fathom Information Design 2014
-@author: Andres Colubri 
 '''
 
 import sys, os, subprocess

@@ -1,7 +1,7 @@
 '''
 Calculates the Obesity composite using the CDC BMI tables
 
-@author: Mahan Nekoui, Andres Colubri
+@copyright: Fathom Information Design 2014
 '''
 
 import csv

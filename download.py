@@ -4,7 +4,6 @@ destination folder. Two arguments are mandatory: first: the source url,
 and second, the destination folder. 
 
 @copyright: Fathom Information Design 2014
-@author: Andres Colubri 
 '''
 
 import sys

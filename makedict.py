@@ -2,7 +2,6 @@
 Creates the dictionary file from the input metadata
 
 @copyright: Fathom Information Design 2014
-@author: Andres Colubri 
 '''
 
 import sys, os, csv, math

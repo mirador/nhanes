@@ -3,7 +3,6 @@ Validates the input metadata file against the csv files in the
 specified folder.
 
 @copyright: Fathom Information Design 2014
-@author: Andres Colubri 
 '''
 
 import sys, os, csv, math

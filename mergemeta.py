@@ -3,7 +3,6 @@ Merges the common variables in the supplied metadata files
 into the corresponding merged metadata.
 
 @copyright: Fathom Information Design 2014
-@author: Andres Colubri 
 '''
 
 import sys, os, csv, math, codecs

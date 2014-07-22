@@ -2,7 +2,6 @@
 Runs all the steps necessary to create a merged Mirador dataset
 
 @copyright: Fathom Information Design 2014
-@author: Andres Colubri
 '''
 
 import sys, os, subprocess

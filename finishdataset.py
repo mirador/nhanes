@@ -3,7 +3,6 @@ Cleans up the folder of a Mirador dataset and any required adds configuration fi
 leaving it ready for distribution
 
 @copyright: Fathom Information Design 2014
-@author: Andres Colubri
 '''
 
 import sys, os

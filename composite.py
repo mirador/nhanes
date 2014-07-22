@@ -2,7 +2,6 @@
 # Adds a composite variable to the input data and dictionary, using the provided script
 
 @copyright: Fathom Information Design 2014
-@author: Mahan Nekoui, Andres Colubri
 '''
 
 import csv

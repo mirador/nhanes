@@ -10,7 +10,7 @@ are automatically opened by libreoffice.
 The Hmisc package should be installed in R:
 install.packages("Hmisc") (from R)
 
-@author: Andres Colubri 
+@copyright: Fathom Information Design 2014
 '''
 
 import rpy2.robjects as robjects
