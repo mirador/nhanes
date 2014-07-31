@@ -20,6 +20,7 @@ if len(sys.argv) == 4:
     overwrite = False
     append_str = sys.argv[3]    
 
+work_path = os.getcwd()
 [module_path, module_filename] = os.path.split(user_script);
 
 module_path = os.path.abspath(module_path)
@@ -28,13 +29,23 @@ sys.path.insert(0, module_path)
 
 module = import_module(module_filename)
 
-print "ADDING COMPOSITE " + module.get_name() + " TO MIRADOR DATASET IN " + mira_path + "..."
+try:
+    # Changing to script folder just in case it opens some files during initialization
+    os.chdir(module_path)
+    module.init()
+    os.chdir(work_path);
+except AttributeError:    
+    pass
 
-work_path = os.getcwd()
+print "ADDING COMPOSITE " + module.get_name() + " TO MIRADOR DATASET IN " + mira_path + "..."
 
 datafile = mira_path + "/data.tsv"
 dictfile = mira_path + "/dictionary.tsv"
 grpfile = mira_path + "/groups.xml"
+binfile = mira_path + "/data.bin"
+
+if overwrite and os.path.isfile(binfile):
+        os.remove(binfile)
 
 if overwrite:
     datafile1 = datafile
@@ -67,14 +78,6 @@ with open(dictfile) as tsv:
                  weight_types[name] = row[3]
         dict.append(row)
         i = i + 1
-        
-try:
-    # Changing to script folder just in case it opens some files during initialization
-    os.chdir(module_path)
-    module.init()
-    os.chdir(work_path);
-except AttributeError:    
-    pass
     
 with open(datafile1, "wb") as tsv:
     writer = csv.writer(tsv, dialect="excel-tab")
