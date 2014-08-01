@@ -132,7 +132,8 @@ for group in root.findall('group'):
         comp_group = group
         break
 
-if comp_group is  None:
+# TODO: specify the location to insert the composite group as an argument
+if comp_group is None:
     comp_group = ET.Element('group')
     comp_group.set("name", "Composites")
     root.insert(len(root) - 1, comp_group);    
