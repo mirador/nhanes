@@ -56,26 +56,26 @@ cycles can also be aggregated into a single dataset, and the aggregation scripts
 into account properly merging the sample and subsample weights (see appendix), and also 
 the equivalence between variable names across cycles.
 
-1) Downloads the data for a given cycle:
+1. Downloads the data for a given cycle:
 
 ```bash
 python getdata.py 1999-2000
 ```
 
-2) Creates Mirador dataset:
+2. Creates Mirador dataset:
 
 ```bash
 python makedataset.py 1999-2000
 ```
 
-3) Creates an aggregated dataset, by merging all the cycles encompassed by the specified
+3. Creates an aggregated dataset, by merging all the cycles encompassed by the specified
 interval:
 
 ```bash
 python mergedatasets.py 1999-2010
 ```
 
-4) Finish dataset, by deleting temporary files and adding a Mirador configuration file. 
+4. Finish dataset, by deleting temporary files and adding a Mirador configuration file. 
 Once finished, it cannot be used for merging, because the merging scripts use temporary 
 files that are removed by this step. The contents of the dataset folder are ready to load
 from Mirador:
@@ -99,13 +99,13 @@ executed by composite.py, a fully commented template is provided in
 composites/template.py. The result of the calculation can simply overwrite the source 
 dataset, or stored in another set of data, dictionary, and grouping files.
 
-1) Adding a composite, overwriting the original dataset
+1. Adding a composite, overwriting the original dataset
 
 ```bash
 python composite.py data/mirador/1999-2000 composites/obesity.py
 ```
 
-2) Adding a composite, without overwriting the original dataset. The new files will be 
+2. Adding a composite, without overwriting the original dataset. The new files will be 
 called data_obesity.tsv, dictionary_obesity.tsv, and groups_obesity.xml, and stored in the
 same dataset folder. 
 
@@ -122,19 +122,19 @@ which can be run individually in the case an error occurs and one needs to isola
 source of the problem, and also to have more control on the location where the files are
 stored, etc. 
 
-1) Download data:
+1. Download data:
 
 ```bash
 python download.py ftp://ftp.cdc.gov/pub/Health_Statistics/NCHS/nhanes/1999-2000 data/sources/xpt/1999-2000
 ```
 
-2) Convert to csv:
+2. Convert to csv:
 
 ```bash
 python xpt2csv.py data/sources/xpt/1999-2000 data/sources/csv/1999-2000
 ```
 
-3) Make metadata file, the additional argument -nodetails can be used to disable verbose 
+3. Make metadata file, the additional argument -nodetails can be used to disable verbose 
 output of messages:
 
 ```bash
@@ -145,7 +145,7 @@ python makemeta.py 1999-2000 Laboratory data/sources/csv/1999-2000 data/mirador/
 python makemeta.py 1999-2000 Questionnaire data/sources/csv/1999-2000 data/mirador/1999-2000/question.xml -nodetails
 ```
 
-4) Validate metadata:
+4. Validate metadata:
 
 ```bash
 python checkmeta.py data/mirador/1999-2000/weights.xml
@@ -155,30 +155,30 @@ python checkmeta.py data/mirador/1999-2000/lab.xml
 python checkmeta.py data/mirador/1999-2000/question.xml
 ```
 
-5) Create aggregated data file:
+5. Create aggregated data file:
 
 ```bash
 python aggregate.py data/mirador/1999-2000 demo.xml lab.xml exam.xml question.xml weights.xml data.tsv
 ```
-6) Create dictionary file:
+6. Create dictionary file:
 
 ```bash
 python makedict.py data/mirador/1999-2000 demo.xml lab.xml exam.xml question.xml weights.xml data.tsv dictionary.tsv
 ```
 
-7) Create groups file
+7. Create groups file
 
 ```bash
 python makegroups.py data/mirador/1999-2000 demo.xml exam.xml lab.xml question.xml weights.xml groups.xml
 ```
 
-8) Check the aggregated file against the original csv files:
+8. Check the aggregated file against the original csv files:
 
 ```bash
 python checkdata.py data/mirador/1999-2000 demo.xml lab.xml exam.xml question.xml weights.xml data.tsv
 ```
 
-9) Merge metadata from different cycles (and each step updates weights.list):
+9. Merge metadata from different cycles (and each step updates weights.list):
 
 ```bash
 python mergemeta.py demo.xml 1999-2010 Demographics data/mirador data/mirador/1999-2010 varequiv
@@ -187,13 +187,13 @@ python mergemeta.py lab.xml 1999-2010 Laboratory data/mirador data/mirador/1999-
 python mergemeta.py question.xml 1999-2010 Questionnaire data/mirador data/mirador/1999-2010 varequiv
 ```
 
-10) Calculate merged weights csv and weights.xml:
+10. Calculate merged weights csv and weights.xml:
 
 ```bash
 python makeweights.py data/mirador/1999-2010 weights.list weights.csv weights.xml
 ```
 
-11) Validate merged metadata:
+11. Validate merged metadata:
 
 ```bash
 python checkmeta.py data/mirador/1999-2010/weights.xml
@@ -203,27 +203,30 @@ python checkmeta.py data/mirador/1999-2010/lab.xml
 python checkmeta.py data/mirador/1999-2010/question.xml
 ```
 
-12) Created merged datafiles, using the aggregate script again:
+12. Created merged datafiles, using the aggregate script again:
 
 ```bash
 python aggregate.py data/mirador/1999-2010 demo.xml lab.xml exam.xml question.xml weights.xml data.tsv
 ```
 
-13) Create dictionary file
+13. Create dictionary file
 
 ```bash
 python makedict.py data/mirador/1999-2010 demo.xml lab.xml exam.xml question.xml weights.xml data.tsv dict.tsv
 ```
-14) Create groups file
+
+14. Create groups file
 
 ```bash
 python makegroups.py data/mirador/1999-2010 demo.xml exam.xml lab.xml question.xml weights.xml groups.xml
 ```
-15) Check the aggregated merged data against the original csv files.
+
+15. Check the aggregated merged data against the original csv files.
 
 ```bash
 python checkdata.py data/mirador/1999-2010 demo.xml lab.xml exam.xml question.xml weights.xml data.tsv
 ```
+
 ### CUSTOM HTML PARSERS
 
 The getweights.py and makemeta.py scripts parse the online NHANES codebooks using the 
@@ -237,7 +240,6 @@ separately.
 
 The NHANES components to use in the parsing/aggregation can be set by editing the components
 file provide alongside the scripts
-
 
 ### APPENDIX
 
