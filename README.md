@@ -14,9 +14,9 @@ Mirador.
 The scripts have the following dependencies:
 
 1. Python 2.7.3+ (not tested with 3+) and the following packages:
-..* rpy2: http://rpy.sourceforge.net/rpy2_documentation.html 
-..* BeautifulSoup: http://www.crummy.com/software/BeautifulSoup
-..* Requests: http://docs.python-requests.org/en/latest/index.html  
+  * rpy2: http://rpy.sourceforge.net/rpy2_documentation.html 
+  * BeautifulSoup: http://www.crummy.com/software/BeautifulSoup
+  * Requests: http://docs.python-requests.org/en/latest/index.html  
 2. R, with Hmisc package
 3. Windows note: The easy_install for Python on Windows 64bit can be obtained from the 
 setuptools package available at http://www.lfd.uci.edu/~gohlke/pythonlibs/
