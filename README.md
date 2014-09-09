@@ -1,4 +1,4 @@
-# NHANES DATA SCRIPTS 
+## NHANES DATA SCRIPTS 
 
 This set of Python scripts downloads, parses, and aggregates the public data from the 
 National Health and Nutrition Examination Survey (NHANES, 
@@ -9,7 +9,7 @@ and a xml file with the grouping structure can be used as input for visualizatio
 Mirador.
 
 
-## DEPENDENCIES
+### DEPENDENCIES
 
 The scripts have the following dependencies:
 
@@ -21,7 +21,7 @@ The scripts have the following dependencies:
 3. Windows note: The easy_install for Python on Windows 64bit can be obtained from the 
 setuptools package available at http://www.lfd.uci.edu/~gohlke/pythonlibs/
 
-## CREATING AND MERGING DATASETS
+### CREATING AND MERGING DATASETS
 
 The sequence of steps to generate a Mirador-valid dataset is to first download the 
 individual data files from the NHANES ftp server, and then run the scripts that parse and 
@@ -83,14 +83,15 @@ from Mirador:
 ```bash
 python finishdataset.py 1999-2010
 ```
+
 If the temporary files are needed to redo merging operations, once can add the -keep 
 parameter:
 
 ```bash
 python finishdataset.py 1999-2010 -keep
-```bash
+```
 
-## ADDING COMPOSITE VARIABLES
+### ADDING COMPOSITE VARIABLES
 
 Composite variables are defined as function of existing variables in the dataset, and they
 can be added by using the composite script and providing a python script that defines the
@@ -113,9 +114,9 @@ same dataset folder.
 python composite.py data/mirador/1999-2000 composites/obesity.py _obesity
 ```
 
-## ADVANCED USE
+### ADVANCED USE
 
-### STEP BY STEP EXECUTION
+#### STEP BY STEP EXECUTION
 
 The getdata, makedataset, and mergedatasets scripts execute several intermediate steps, 
 which can be run individually in the case an error occurs and one needs to isolate the 
@@ -228,7 +229,7 @@ python makegroups.py data/mirador/1999-2010 demo.xml exam.xml lab.xml question.x
 python checkdata.py data/mirador/1999-2010 demo.xml lab.xml exam.xml question.xml weights.xml data.tsv
 ```
 
-### CUSTOM HTML PARSERS
+#### CUSTOM HTML PARSERS
 
 The getweights.py and makemeta.py scripts parse the online NHANES codebooks using the 
 BeautifulSoup library, and can use a custom HTML parser, specified the -parser option, 
@@ -237,7 +238,7 @@ http://www.crummy.com/software/BeautifulSoup/bs4/doc/#installing-a-parser
 The default is html.parser, the other ones (html5lib, lxml) need to be installed
 separately.
 
-### ADDING/REMOVING COMPONENTS
+#### ADDING/REMOVING COMPONENTS
 
 The NHANES components to use in the parsing/aggregation can be set by editing the components
 file provide alongside the scripts
