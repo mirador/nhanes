@@ -57,35 +57,27 @@ into account properly merging the sample and subsample weights (see appendix), a
 the equivalence between variable names across cycles.
 
 1. Downloads the data for a given cycle:
-
 ```bash
 python getdata.py 1999-2000
 ```
-
 2. Creates Mirador dataset:
-
 ```bash
 python makedataset.py 1999-2000
 ```
-
 3. Creates an aggregated dataset, by merging all the cycles encompassed by the specified
 interval:
-
 ```bash
 python mergedatasets.py 1999-2010
 ```
-
 4. Finish dataset, by deleting temporary files and adding a Mirador configuration file. 
 Once finished, it cannot be used for merging, because the merging scripts use temporary 
 files that are removed by this step. The contents of the dataset folder are ready to load
 from Mirador:
-
 ```bash
 python finishdataset.py 1999-2010
 ```
 If the temporary files are needed to redo merging operations, once can add the -keep 
 parameter:
-
 ```bash
 python finishdataset.py 1999-2010 -keep
 ```bash
