@@ -1,12 +1,11 @@
 ## NHANES DATA SCRIPTS 
 
 This set of Python scripts downloads, parses, and aggregates the public data from the 
-National Health and Nutrition Examination Survey (NHANES, 
-http://www.cdc.gov/nchs/nhanes.htm), and outputs several files, among them a tsv table
-containing all the data aggregated into a single file, and xml files holding the variable
-metadata from the online codebooks. The data tsv file together with the dictionary file 
-and a xml file with the grouping structure can be used as input for visualization with 
-Mirador.
+[National Health and Nutrition Examination Survey](http://www.cdc.gov/nchs/nhanes.htm) 
+(NHANES), and outputs several files, among them a tsv table containing all the data 
+aggregated into a single file, and xml files holding the variable metadata from the online 
+codebooks. The data tsv file together with the dictionary file and a xml file with the 
+grouping structure can be used as input for visualization with Mirador.
 
 
 ### DEPENDENCIES
