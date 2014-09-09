@@ -232,10 +232,8 @@ python checkdata.py data/mirador/1999-2010 demo.xml lab.xml exam.xml question.xm
 
 The getweights.py and makemeta.py scripts parse the online NHANES codebooks using the 
 BeautifulSoup library, and can use a custom HTML parser, specified the -parser option, 
-and chose among the ones listed in the following page: 
-http://www.crummy.com/software/BeautifulSoup/bs4/doc/#installing-a-parser
-The default is html.parser, the other ones (html5lib, lxml) need to be installed
-separately.
+and chose among the ones listed in [this page](http://www.crummy.com/software/BeautifulSoup/bs4/doc/#installing-a-parser). 
+The default is html.parser, the other ones (html5lib, lxml) need to be installed separately.
 
 #### ADDING/REMOVING COMPONENTS
 
