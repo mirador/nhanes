@@ -12,10 +12,12 @@ grouping structure can be used as input for visualization with Mirador.
 
 The scripts have the following dependencies:
 
-1. Python 2.7.3+ (not tested with 3+) and the following packages:
+1. Python 3 (not compatible with 2.x) and the following packages:
   * rpy2: http://rpy.sourceforge.net/rpy2_documentation.html 
   * BeautifulSoup: http://www.crummy.com/software/BeautifulSoup
   * Requests: http://docs.python-requests.org/en/latest/index.html  
+  * These dependencies can be installed by running:<br> 
+  `pip install -r requirements.txt`
 2. R, with Hmisc package
 3. Windows note: The easy_install for Python on Windows 64bit can be obtained from the 
 setuptools package available at http://www.lfd.uci.edu/~gohlke/pythonlibs/
@@ -125,7 +127,7 @@ stored, etc.
 **1)** Download data:
 
 ```bash
-python download.py ftp://ftp.cdc.gov/pub/Health_Statistics/NCHS/nhanes/1999-2000 data/sources/xpt/1999-2000
+python download.py 1999-2000 data/sources/xpt/1999-2000
 ```
 
 **2)** Convert to csv:
@@ -133,6 +135,8 @@ python download.py ftp://ftp.cdc.gov/pub/Health_Statistics/NCHS/nhanes/1999-2000
 ```bash
 python xpt2csv.py data/sources/xpt/1999-2000 data/sources/csv/1999-2000
 ```
+
+An alternative to use the provided xpt2csv script, which internall calls R to read the xpt files and then save them as csv is to use the [xport reader/writer for Python](https://pypi.org/project/xport/).
 
 **3)** Make metadata file, the additional argument -nodetails can be used to disable verbose 
 output of messages:
@@ -243,6 +247,7 @@ file provide alongside the scripts
 ### APPENDIX
 
 **1)** Relevant links on NHANES weighting:
+
 http://www.cdc.gov/nchs/tutorials/nhanes/SurveyDesign/Weighting/intro.htm
 http://www.cdc.gov/nchs/tutorials/NHANES/SurveyDesign/Weighting/OverviewKey.htm
 http://www.cdc.gov/nchs/tutorials/NHANES/SurveyDesign/Weighting/OverviewExamples.htm

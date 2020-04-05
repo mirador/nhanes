@@ -52,7 +52,6 @@ def validate_variable(var_name, seqn_column, values_column, source_values):
     for i in range(0, n):
         seqn = seqn_column[i]
         value = values_column[i]
-        if value == "\N": value = "NA"
         if not seqn in source_values:
             if value != "NA":
                 ok = False
@@ -70,15 +69,15 @@ data_folder = sys.argv[1]
 in_metadata = sys.argv[2:argc - 1]
 data_file = sys.argv[argc - 1]
 
-print "Loading data..."
+print("Loading data...")
 data_filename = os.path.abspath(os.path.join(data_folder, data_file))
-csv_file = open(data_filename, 'rb')
+csv_file = open(data_filename, 'r')
 csv_reader = csv.reader(csv_file, delimiter='\t', quotechar='"')
-title_row = [x.upper() for x in csv_reader.next()]   
-data_columns = zip(*csv_reader)
-print "Done."
+title_row = [x.upper() for x in next(csv_reader)]
+data_columns = list(zip(*csv_reader))
+print("Done.")
 
-print "Loading metadata..."
+print("Loading metadata...")
 var_names = []
 var_types = {}  
 var_ranges = {}
@@ -95,7 +94,7 @@ for meta in in_metadata:
               if child.tag == "var": 
                   if child.attrib["include"] == "yes":
                       get_variables(child, var_names, var_types, var_ranges, var_files, var_equiv)
-print "Done."
+print("Done.")
 
 if "SEQN" in title_row:
     scol = title_row.index("SEQN")
@@ -105,7 +104,7 @@ else:
     
 seqn = [int(x) for x in data_columns[scol]]
 
-print "Validating data..."
+print("Validating data...")
 all_ok = True
 source_data = {}
 for var in title_row:
@@ -117,12 +116,12 @@ for var in title_row:
         if filename in source_data:
             [titles, rows] = source_data[filename]
         else:    
-            file = open(filename, 'rb')
+            file = open(filename, 'r')
             reader = csv.reader(file, delimiter=',', quotechar='"')
             # The replace is needed because the variable names in the source csv files
             # use "." instead of "_" even though the variable name in the codebook has
             # "_"
-            titles = [x.upper().replace(".", "_") for x in reader.next()]
+            titles = [x.upper().replace(".", "_") for x in next(reader)]
             rows = [row for row in reader]
             source_data[filename] = [titles, rows]
             file.close()
@@ -144,7 +143,7 @@ for var in title_row:
 csv_file.close() 
     
 if all_ok:
-    print "No problems detected."
+    print("No problems detected.")
 else: 
     sys.stderr.write("Some problems detected\n.")
     sys.exit(1)

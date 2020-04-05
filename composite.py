@@ -33,11 +33,11 @@ try:
     # Changing to script folder just in case it opens some files during initialization
     os.chdir(module_path)
     module.init()
-    os.chdir(work_path);
+    os.chdir(work_path)
 except AttributeError:    
     pass
 
-print "ADDING COMPOSITE " + module.get_name() + " TO MIRADOR DATASET IN " + mira_path + "..."
+print("ADDING COMPOSITE " + module.get_name() + " TO MIRADOR DATASET IN " + mira_path + "...")
 
 datafile = mira_path + "/data.tsv"
 dictfile = mira_path + "/dictionary.tsv"
@@ -58,10 +58,10 @@ else:
 
 data = []
 dict = []
-with open(datafile) as tsv:
+with open(datafile, 'r') as tsv:
     for row in csv.reader(tsv, dialect="excel-tab"):        
         data.append(row)
-titles = data[0]
+titles = [str(x) for x in data[0]]
 
 variables = module.variables()
 var_weights = {}
@@ -79,7 +79,7 @@ with open(dictfile) as tsv:
         dict.append(row)
         i = i + 1
     
-with open(datafile1, "wb") as tsv:
+with open(datafile1, "w") as tsv:
     writer = csv.writer(tsv, dialect="excel-tab")
     titles.append(module.get_name())
     writer.writerow(titles)
@@ -113,10 +113,10 @@ if 0 < len(var_weights):
                 # Subsample weights have priority over sample weights  
                 weight = weight1
             elif t0 == 'subsample weight' and t1 == 'subsample weight' and weight != var_weights[var]:
-                print "Warning: the composite variable is calculated across different subsamples"
+                print("Warning: the composite variable is calculated across different subsamples")
     dict_entry.append(weight)
     
-with open(dictfile1, "wb") as tsv:
+with open(dictfile1, "w") as tsv:
     writer = csv.writer(tsv, dialect="excel-tab")
     for row in dict: 
         writer.writerow(row)
@@ -158,4 +158,4 @@ xml_file = open(grpfile1, "w")
 xml_file.write(pretty_xml)
 xml_file.close()
 
-print "DONE"
+print("DONE")

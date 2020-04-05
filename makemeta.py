@@ -45,19 +45,19 @@ def clean_xml_string(str):
     return str
 
 def var_inside_file(datafile, name):
-    csv_file = open(datafile, 'rb') 
+    csv_file = open(datafile, 'r') 
     csv_reader = csv.reader(csv_file, delimiter=',', quotechar='"')
-    title_row = [x.upper().replace(".", "_") for x in csv_reader.next()]
+    title_row = [x.upper().replace(".", "_") for x in next(csv_reader)]
     csv_file.close()
     return name in title_row
 
 def int_or_float(datafile, name):
-    file = open(datafile, 'rb') 
+    file = open(datafile, 'r') 
     reader = csv.reader(file, delimiter=',', quotechar='"')
     # The replace is needed because the variable names in the source csv files
     # use "." instead of "_" even though the variable name in the codebook has
     # "_"    
-    title = [x.upper().replace(".", "_") for x in reader.next()]
+    title = [x.upper().replace(".", "_") for x in next(reader)]
     if not name in title:
         file.close()
         return None    
@@ -78,24 +78,14 @@ def int_or_float(datafile, name):
 def get_variable_type_and_range(short_name, full_name, table, datafile):
     var_type  = None
     var_range = None
-    if not table.tbody: 
-        print "  Warning: codebook of variable " + short_name + " seems malformed"
-        return [var_type, var_range] 
+    if not table.tbody:
+        print("  Warning: codebook of variable " + short_name + " seems malformed")
+        return [var_type, var_range]
     val_list = table.tbody.find_all("tr")
     for val in val_list:
-        if not val.td: 
-            print "  Warning: codebook of variable " + short_name + " seems malformed"        
-            continue
-
-        if 0 < len(val.th.contents):
-            val_code = val.th.contents[0].strip()
-        else:        
-            print "  Warning: codebook of variable " + short_name + " seems malformed"        
-            continue
-              
-        val_desc = ""            
-        if 0 < len(val.td.contents):
-            val_desc = val.td.contents[0].strip()
+        td_list = val.find_all("td")
+        val_code = td_list[0].text
+        val_desc = td_list[1].text            
 
         if val_desc == "Range of Values" or (is_number(val_code) and val_desc == val_code and var_type == None):
             if -1 < val_code.find(" to "):       
@@ -103,7 +93,7 @@ def get_variable_type_and_range(short_name, full_name, table, datafile):
             else:
                 # Single value?
                 var_range = val_code + "," + val_code
-                print "  Warning: range of numeric variable " + short_name + " has a single value " + val_code
+                print("  Warning: range of numeric variable " + short_name + " has a single value " + val_code)
             if var_range == "00:00,23:59" or -1 < full_name.find("HH:MM") or -1 < full_name.find("HHMM"):
                 var_type = "time"                             
             else:
@@ -163,7 +153,7 @@ def get_variable_type_and_range(short_name, full_name, table, datafile):
 def write_xml_line(line):
     ascii_line = ''.join(char for char in line if ord(char) < 128)
     if len(ascii_line) < len(line):
-        print "  Warning: non-ASCII character found in line: '" + line.encode('ascii', 'ignore') + "'"
+        print("  Warning: non-ASCII character found in line: '" + str(line.encode('ascii', 'ignore')) + "'")
     xml_file.write(ascii_line + '\n')
     xml_strings.append(ascii_line + '\n')
 
@@ -179,7 +169,7 @@ def strip_units(name):
         return None    
 
 def repeated_var(newname, oldnames):
-    newnameNU = strip_units(newname)
+    newnameNU = strip_units(str(newname))
     if not newnameNU: return None
     for oldname in oldnames:
         oldnameNU = strip_units(oldname[1])
@@ -203,6 +193,8 @@ data_cycle     = sys.argv[1]
 data_component = sys.argv[2]
 data_folder    = sys.argv[3]
 xml_filename   = sys.argv[4]
+
+base_url = "https://wwwn.cdc.gov"
 
 html_parser    = "html.parser"
 print_detail_info = 1
@@ -236,7 +228,7 @@ for i in range(0, 5):
         break; 
     except:
         html_doc = None          
-        if i < 5 - 1: print "  Warning: Could not open " + request_url + ", will try again"
+        if i < 5 - 1: print("  Warning: Could not open " + request_url + ", will try again")
 if html_doc == None:
     sys.stderr.write("Error: Failed opening " + request_url + " after 5 attempts\n")
     sys.exit(1)
@@ -260,6 +252,7 @@ for table in html_soup.find_all('table'):
         path, ext = os.path.splitext(codebook_url)
         if ext.lower() == ".htm" or ext.lower() == ".html":
         
+            codebook_url = base_url + codebook_url
             codebook_doc = None
             for i in range(0, 5):
                 try:
@@ -267,12 +260,12 @@ for table in html_soup.find_all('table'):
                     break; 
                 except:
                     codebook_doc = None          
-                    if i < 5 - 1: print "  Warning: Could not open " + codebook_url + ", will try again"
+                    if i < 5 - 1: print("  Warning: Could not open " + codebook_url + ", will try again")
             if codebook_doc == None:
                 sys.stderr.write("Error: Failed opening " + codebook_url + " after 5 attempts\n")
                 sys.exit(1)
             
-            print "Extracting metadata from codebook " + codebook_url + "..."
+            print("Extracting metadata from codebook " + codebook_url + "...")
             codebook_soup = BeautifulSoup(codebook_doc.text, html_parser)            
             header = codebook_soup.find("div", {"id": "PageHeader"})            
             if header == None: continue
@@ -285,7 +278,7 @@ for table in html_soup.find_all('table'):
             data_filename = os.path.splitext(data_file)[0].upper()
             csv_data_filepath = os.path.abspath(os.path.join(data_folder, data_filename + ".csv"))
             if not os.path.exists(csv_data_filepath):
-                print "  Warning: data file " + csv_data_filepath + " missing, skipping codebook " + codebook_url
+                print("  Warning: data file " + csv_data_filepath + " missing, skipping codebook " + codebook_url)
                 continue                
             csv_data_relpath = os.path.join(data_folder, data_filename + ".csv")
             
@@ -293,7 +286,7 @@ for table in html_soup.find_all('table'):
             if codebook == None: continue
             variables = codebook.find_all("div", {"class": "pagebreak"})
             
-            write_xml_line('  <table include="yes" name="' + table_name + '">')
+            write_xml_line('  <table include="yes" name="' + str(table_name) + '">')
             
             has_seqn = False
             xml_lines = []
@@ -311,7 +304,7 @@ for table in html_soup.find_all('table'):
             for var in variables:
                 var_info = var.find("dl")
                 if not var_info: 
-                    print "  Warning: codebook for '" + str(var) + "' seems malformed, skipping"
+                    print("  Warning: codebook for '" + str(var) + "' seems malformed, skipping")
                     continue 
                 var_table = var.find("table")
                 info = var_info.find_all("dd")
@@ -319,20 +312,20 @@ for table in html_soup.find_all('table'):
                 if 0 < len(info):
                     short_name = clean_xml_string(info[0].contents[0]).upper()
                 else:
-                    print "  Warning: variable without short name, skipping"
+                    print("  Warning: variable without short name, skipping")
                     continue
                                                                                 
                 short_name = short_name.strip()
                 if short_name == "":
-                    print "  Warning: variable without short name, skipping"
+                    print("  Warning: variable without short name, skipping")
                     continue
 
-                if short_name != "SEQN" and short_name in all_vars:                                    
-                    print "  Warning: variable " + short_name + " duplicated, skipping"
+                if short_name != "SEQN" and short_name in all_vars:
+                    print("  Warning: variable " + short_name + " duplicated, skipping")
                     continue
 
                 if not var_inside_file(csv_data_filepath, short_name):
-                    print "  Warning: variable " + short_name + " is not included in the source datafile " + csv_data_filepath + ", skipping"
+                    print("  Warning: variable " + short_name + " is not included in the source datafile " + csv_data_filepath + ", skipping")
                     continue            
                     
                 full_name = ""
@@ -342,11 +335,11 @@ for table in html_soup.find_all('table'):
  
                 full_name = full_name.strip()
                 if full_name == "": 
-                    print "  Warning: variable " + short_name + " doesn't have full name, skipping"
+                    print("  Warning: variable " + short_name + " doesn't have full name, skipping")
                     continue
                                 
                 if var_table == None and short_name != "SEQN":
-                    print "  Warning: variable " + full_name + " (" + short_name + ") doesn't have a value table, skipping"
+                    print("  Warning: variable " + full_name + " (" + short_name + ") doesn't have a value table, skipping")
                     continue
 
                 include_var = '"yes"'
@@ -377,32 +370,32 @@ for table in html_soup.find_all('table'):
 
                 # PSU and stratum variables are not included        
                 if short_name == "SDMVPSU" or short_name == "SDMVSTRA":
-                    if print_detail_info: print "  Warning: Variable " + full_name + " (" + short_name + ") is not included because is a PSU or stratum variable"                
+                    if print_detail_info: print("  Warning: Variable " + full_name + " (" + short_name + ") is not included because is a PSU or stratum variable")
                     include_var = '"no"'    
         
                 # Comment variables are not included
                 if -1 < fnl.find("comment"):
-                    if print_detail_info: print "  Warning: Variable " + full_name + " (" + short_name + ") is not included because it seems to be a comment variable"
+                    if print_detail_info: print("  Warning: Variable " + full_name + " (" + short_name + ") is not included because it seems to be a comment variable")
                     include_var = '"no"'
 
                 # Status code variables are not included
                 if -1 < fnl.find("status code"):
-                    if print_detail_info: print "  Warning: Variable " + full_name + " (" + short_name + ") is not included because it seems to be a code variable"
+                    if print_detail_info: print("  Warning: Variable " + full_name + " (" + short_name + ") is not included because it seems to be a code variable")
                     include_var = '"no"'
             
                 # Flag variables are not included
                 if -1 < fnl.find("imputation flag") or -1 < fnl.find("mode flag") or -1 < fnl.find(" flag "):
-                    if print_detail_info: print "  Warning: Variable " + full_name + " (" + short_name + ") is not included because it seems to be a flag variable"
+                    if print_detail_info: print("  Warning: Variable " + full_name + " (" + short_name + ") is not included because it seems to be a flag variable")
                     include_var = '"no"'
                      
                 # Replicate numbers are not included
                 if -1 < fnl.find("replicate number"):
-                    if print_detail_info: print "  Warning: Variable " + full_name + " (" + short_name + ") is not included because it seems to be a replication number variable"
+                    if print_detail_info: print("  Warning: Variable " + full_name + " (" + short_name + ") is not included because it seems to be a replication number variable")
                     include_var = '"no"'
                     
                 # Food or modification codes are not included                    
                 if -1 < fnl.find("food code") or -1 < fnl.find("modification code"):
-                    if print_detail_info: print "  Warning: Variable " + full_name + " (" + short_name + ") is not included because it seems to be a food or modification code variable"
+                    if print_detail_info: print("  Warning: Variable " + full_name + " (" + short_name + ") is not included because it seems to be a food or modification code variable")
                     include_var = '"no"'                    
                             
                 # Repeated variables within the same table (i.e.: same quantity expressed in different units)
@@ -411,7 +404,7 @@ for table in html_soup.find_all('table'):
                 # by appending "SI" to the variable name, for example: LBDGLTSI and LBDGLT.
                 repvar = repeated_var(fnl, table_vars)
                 if repvar:
-                    if print_detail_info: print "  Warning: Variable " + full_name + " (" + short_name + ") is not included because it seems to be a duplicate of " + repvar[1] + " (" + repvar[0] + ")"
+                    if print_detail_info: print("  Warning: Variable " + full_name + " (" + short_name + ") is not included because it seems to be a duplicate of " + repvar[1] + " (" + repvar[0] + ")")
                     include_var = '"no"'
             
                 if short_name == "SEQN":
@@ -435,7 +428,7 @@ for table in html_soup.find_all('table'):
                             values = var_range.split(";")                    
                             single_valued = len(values) < 2
                         if single_valued:
-                            print "  Warning: Variable " + full_name + " (" + short_name + ") is single-valued, skipping"
+                            print("  Warning: Variable " + full_name + " (" + short_name + ") is single-valued, skipping")
                             include_var = '"no"'
                             
                 if include_var == '"yes"':
@@ -446,17 +439,17 @@ for table in html_soup.find_all('table'):
                     xml_lines.append('    <var include=' + include_var + ' weight=' + weight_var + '><short>' + short_name + '</short><full>' + full_name + '</full><type>' + var_type + '</type><range>' + var_range + '</range>' + weighted_by + '<datafile>' + csv_data_relpath + '</datafile></var>')
                 else:
                     if var_type == "time":
-                        if print_detail_info: print "  Warning: Variable " + full_name + " (" + short_name + ") is a time variable, skipping because time variables are not yet supported"
+                        if print_detail_info: print("  Warning: Variable " + full_name + " (" + short_name + ") is a time variable, skipping because time variables are not yet supported")
                     elif var_type == "recorded":
-                        if print_detail_info: print "  Warning: Variable " + full_name + " (" + short_name + ") is a recorded variable, skipping because recorded variables are not yet supported"
+                        if print_detail_info: print("  Warning: Variable " + full_name + " (" + short_name + ") is a recorded variable, skipping because recorded variables are not yet supported")
                     else:
-                        print "  Warning: Cannot find type/range for variable " + full_name + " (" + short_name + ")"
+                        print("  Warning: Cannot find type/range for variable " + full_name + " (" + short_name + ")")
                  
             if has_seqn:
                 for line in xml_lines:
                     write_xml_line(line)
             else:             
-                print "  Warning: SEQN variable not found in table " + table_name + ", skipping variables " + ",".join([nam[0] for nam in table_vars])
+                print("  Warning: SEQN variable not found in table " + str(table_name) + ", skipping variables " + ",".join([nam[0] for nam in table_vars]))
 
             write_xml_line('  </table>')            
             
@@ -467,7 +460,7 @@ xml_file.close()
 try:
     doc = parseString(''.join(xml_strings))
     doc.toxml()
-    print "Done."    
+    print("Done.")
 except:
     sys.stderr.write("XML validation error:\n")
     raise

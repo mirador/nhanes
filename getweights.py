@@ -42,12 +42,12 @@ def clean_xml_string(str):
     return str
 
 def int_or_float(datafile, name):
-    file = open(datafile, 'rb') 
+    file = open(datafile, 'r') 
     reader = csv.reader(file, delimiter=',', quotechar='"')
     # The replace is needed because the variable names in the source csv files
     # use "." instead of "_" even though the variable name in the codebook has
     # "_"    
-    title = [x.upper().replace(".", "_") for x in reader.next()]
+    title = [x.upper().replace(".", "_") for x in next(reader)]
     if not name in title:
         file.close()
         return None    
@@ -70,15 +70,16 @@ def get_variable_type_and_range(short_name, full_name, table, datafile):
     var_range = None
     val_list = table.tbody.find_all("tr")
     for val in val_list:
-        val_code = val.th.contents[0].strip()
-        val_desc = val.td.contents[0].strip()
+        td_list = val.find_all("td")
+        val_code = td_list[0].text
+        val_desc = td_list[1].text
         if val_desc == "Range of Values" or (is_number(val_code) and val_desc == val_code and var_type == None):
             if -1 < val_code.find(" to "):       
                 var_range = val_code.replace(" to ", ",")
             else:
                 # Single value?
                 var_range = val_code + "," + val_code
-                print "  Warning: range of numeric variable " + short_name + " has a single value " + val_code
+                print("  Warning: range of numeric variable " + short_name + " has a single value " + val_code)
             if var_range == "00:00,23:59" or -1 < full_name.find("HH:MM") or -1 < full_name.find("HHMM"):
                 var_type = "time"                             
             else:
@@ -138,7 +139,7 @@ def get_variable_type_and_range(short_name, full_name, table, datafile):
 def write_xml_line(line):
     ascii_line = ''.join(char for char in line if ord(char) < 128)
     if len(ascii_line) < len(line):
-        print "  Warning: non-ASCII character found in line: '" + line.encode('ascii', 'ignore') + "'"
+        print("  Warning: non-ASCII character found in line: '" + str(line.encode('ascii', 'ignore')) + "'")
     xml_file.write(ascii_line + '\n')
     xml_strings.append(ascii_line + '\n')
 
@@ -151,7 +152,7 @@ def get_component_weights(component, year, parser):
             break; 
         except:
             html_doc = None          
-            if i < 5 - 1: print "  Warning: Could not open " + request_url + ", will try again"
+            if i < 5 - 1: print("  Warning: Could not open " + request_url + ", will try again")
     if html_doc == None:
         sys.stderr.write("Error: Failed opening " + request_url + " after 5 attempts\n")
         sys.exit(1)
@@ -166,11 +167,15 @@ def get_component_weights(component, year, parser):
     # Getting all the codebooks in listed in the datapage
     for table in html_soup.find_all('table'): 
         links = table.find_all('a')
-        for link in links:        
+        for link in links:
             codebook_url = link['href']
+            
             path, ext = os.path.splitext(codebook_url)
             if ext.lower() == ".htm" or ext.lower() == ".html":
         
+                codebook_url = base_url + codebook_url
+                print(codebook_url)
+
                 codebook_doc = None
                 for i in range(0, 5):
                     try:
@@ -178,12 +183,12 @@ def get_component_weights(component, year, parser):
                         break; 
                     except:
                         codebook_doc = None          
-                        if i < 5 - 1: print "  Warning: Could not open " + codebook_url + ", will try again"
+                        if i < 5 - 1: print("  Warning: Could not open " + codebook_url + ", will try again")
                 if codebook_doc == None:
                     sys.stderr.write("Error: Failed opening " + codebook_url + "after 5 attempts\n")
                     sys.exit(1)
             
-                print "Extracting metadata from codebook " + codebook_url + "..."
+                print("Extracting metadata from codebook " + codebook_url + "...")
                 codebook_soup = BeautifulSoup(codebook_doc.text, parser)
 
                 header = codebook_soup.find("div", {"id": "PageHeader"})            
@@ -208,7 +213,7 @@ def get_component_weights(component, year, parser):
                 for var in variables:
                     var_info = var.find("dl")
                     if not var_info: 
-                        print "  Warning: codebook for '" + str(var) + "' seems malformed, skipping"
+                        print("  Warning: codebook for '" + str(var) + "' seems malformed, skipping")
                         continue
                     var_table = var.find("table")
                     info = var_info.find_all("dd")
@@ -216,12 +221,12 @@ def get_component_weights(component, year, parser):
                     if 0 < len(info):
                         short_name = clean_xml_string(info[0].contents[0]).upper()
                     else:
-                        print "  Warning: variable without short name, skipping"
+                        print("  Warning: variable without short name, skipping")
                         continue
                     
                     short_name = short_name.strip()
                     if short_name == "":
-                        print "  Warning: variable without short name, skipping"
+                        print("  Warning: variable without short name, skipping")
                         continue
                         
                     if short_name == "SEQN":
@@ -234,7 +239,7 @@ def get_component_weights(component, year, parser):
                         
                     full_name = full_name.strip()
                     if full_name == "": 
-                        print "  Warning: variable " + short_name + " doesn't have full name, skipping"  
+                        print("  Warning: variable " + short_name + " doesn't have full name, skipping")
                         continue                        
 
                     fnl = full_name.lower()
@@ -244,17 +249,17 @@ def get_component_weights(component, year, parser):
                             include_weight = '"no"'
                      
                         if var_table == None:
-                            print "  Warning: variable " + full_name + " (" + short_name + ") doesn't have a value table, skipping"
+                            print("  Warning: variable " + full_name + " (" + short_name + ") doesn't have a value table, skipping")
                             continue
                          
                         (var_type, var_range) = get_variable_type_and_range(short_name, full_name, var_table, csv_data_filepath)
                         
                         if var_type != "float":
-                            print "  Warning: wrong type for weight variable " + full_name + " (" + short_name + ")"
+                            print("  Warning: wrong type for weight variable " + full_name + " (" + short_name + ")")
                             continue
                                                     
                         if var_range == None:
-                            print "  Warning: Cannot find type/range for weight variable " + full_name + " (" + short_name + ")"
+                            print("  Warning: Cannot find type/range for weight variable " + full_name + " (" + short_name + ")")
                             continue 
                                                  
                         weight_vars.append(short_name)
@@ -273,9 +278,11 @@ def get_component_weights(component, year, parser):
                     else:
                         for line in xml_lines: subsample_xml_lines.append(line)                        
                 elif table_vars: 
-                    print "  Warning: SEQN variable not found in this table (" + table_name + "), skipping weights variables " + table_vars 
+                    print("  Warning: SEQN variable not found in this table (" + table_name + "), skipping weights variables " + table_vars)
                  
     
+base_url = "https://wwwn.cdc.gov"
+
 data_cycle     = sys.argv[1] 
 data_folder    = sys.argv[2]
 xml_filename   = sys.argv[3]
@@ -327,7 +334,7 @@ xml_file.close()
 try:
     doc = parseString(''.join(xml_strings))
     doc.toxml()
-    print "Done."    
+    print("Done.")
 except:
     sys.stderr.write("XML validation error:\n")
     raise

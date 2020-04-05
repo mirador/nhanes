@@ -67,7 +67,7 @@ all_var_names = []
 all_var_types = []
 all_var_ranges = []
 
-print "Getting variable values..."
+print("Getting variable values...")
 for meta in in_metadata:
   xml_filename = os.path.abspath(os.path.join(out_folder, meta))  
   tree = ET.parse(xml_filename)
@@ -92,15 +92,15 @@ for meta in in_metadata:
           if var_names != []:
               for filename in var_files.keys():
                   if not os.path.exists(filename):
-                      print "  Warning: File " + filename + " is missing, won't add values for variables " + ",".join(list(var_files[filename]))
+                      print("  Warning: File " + filename + " is missing, won't add values for variables " + ",".join(list(var_files[filename])))
                       continue              
                     
-                  csv_file = open(filename, 'rb')
+                  csv_file = open(filename, 'r')
                   csv_reader = csv.reader(csv_file, delimiter=',', quotechar='"')
                   # The replace is needed because the variable names in the source csv files
                   # use "." instead of "_" even though the variable name in the codebook has
                   # "_"                  
-                  title_row = [x.upper().replace(".", "_") for x in csv_reader.next()]   
+                  title_row = [x.upper().replace(".", "_") for x in next(csv_reader)]   
                   data_rows = [row for row in csv_reader]
                   
                   # Getting the values for each variable
@@ -112,7 +112,7 @@ for meta in in_metadata:
                       if "SEQN" in title_row:
                           seqn_col = title_row.index("SEQN")
                       else:
-                          print "  Warning: Not adding the values of variable " + var + " because SEQN is missing from its datafile " + filename
+                          print("  Warning: Not adding the values of variable " + var + " because SEQN is missing from its datafile " + filename)
                           continue
 
                       try:                          
@@ -129,7 +129,7 @@ for meta in in_metadata:
                                   idx = -1                           
                           
                       if var_col == -1:
-                          print "  Warning: Variable " + var + " is missing from " + filename
+                          print("  Warning: Variable " + var + " is missing from " + filename)
                           continue
                     
                       idx = 0 
@@ -155,7 +155,7 @@ for meta in in_metadata:
 
                   csv_file.close()
 
-print "Done."
+print("Done.")
 
 # Construct title line
 name = "SEQN"
@@ -168,7 +168,7 @@ for i in range(0, count):
         name = nami
         title_line = title_line + "\t" + name
 
-print "Writing aggregated data file..."
+print("Writing aggregated data file...")
 data_file = open(out_data_filename, 'w')
 data_file.write(title_line + "\n")
 rowCount = 0
@@ -182,17 +182,17 @@ for seqn in list_seqn:
         if typi != "recorded":    
             colCount = colCount + 1        
             vali = all_var_values[i] 
-            if vali.has_key(seqn):                
+            if seqn in vali:                
                 if vali[seqn] == "NA" or vali[seqn] == "":
-                    line = line + "\t\N"
+                    line = line + "\tNA"
                 else:        
                     line = line + "\t" + vali[seqn]  
             else:
-                line = line + "\t\N" 
+                line = line + "\tNA" 
     if colCount != count + 1: 
         sys.stderr.write("Number of columns is inconsistent at row " + rowCount + ". It is " + colCount + "but should be " + count + "\n")
         sys.exit(1)
     rowCount = rowCount + 1
     data_file.write(line + "\n")
 data_file.close()
-print "Done: written",rowCount,"rows and",count,"columns."
+print("Done: written",rowCount,"rows and",count,"columns.")

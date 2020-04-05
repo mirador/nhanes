@@ -11,7 +11,7 @@ import xml.etree.ElementTree as ET
 def write_xml_line(line):
     ascii_line = ''.join(char for char in line if ord(char) < 128)
     if len(ascii_line) < len(line):
-        print "  Warning: non-ASCII character found in line: '" + line.encode('ascii', 'ignore') + "'"
+        print("  Warning: non-ASCII character found in line: '" + str(line.encode('ascii', 'ignore')) + "'")
     xml_file.write(ascii_line + '\n')
     xml_strings.append(ascii_line + '\n')
 
@@ -41,7 +41,7 @@ xml_strings = []
 
 write_xml_line('<?xml version="1.0"?>')
 
-print "Creating groups file..."
+print("Creating groups file...")
 write_xml_line('<data>')
 for meta in in_metadata:
     xml_filename = os.path.abspath(os.path.join(data_folder, meta))  
@@ -66,7 +66,7 @@ xml_file.close()
 try:
     doc = parseString(''.join(xml_strings))
     doc.toxml()
-    print "Done."    
+    print("Done.")
 except:
     sys.stderr.write("XML validation error:\n")
     raise

@@ -11,7 +11,7 @@ from xml.dom.minidom import parseString
 def write_xml_line(line):
     ascii_line = ''.join(char for char in line if ord(char) < 128)
     if len(ascii_line) < len(line):
-        print "  Warning: non-ASCII character found in line: '" + line.encode('ascii', 'ignore') + "'"
+        print("  Warning: non-ASCII character found in line: '" + line.encode('ascii', 'ignore') + "'")
     xml_file.write(ascii_line + '\n')
     xml_strings.append(ascii_line + '\n')
 
@@ -36,7 +36,7 @@ for line in lines:
     weights_subsamples[wname] = wsub
 wfile.close()
 
-print "Loading source weights..."
+print("Loading source weights...")
 
 num_cycles = 0
 
@@ -60,7 +60,7 @@ for var in weights_files:
     
     if 0 < num_cycles:
         if num_cycles != len(files):
-            print "Error: inconsistent cycle length across variables: " + num_cycles + " != " + len(files)
+            print("Error: inconsistent cycle length across variables: " + num_cycles + " != " + len(files))
             sys.exit(1)
     else:
         num_cycles = len(files)
@@ -70,24 +70,24 @@ for var in weights_files:
         factor = factors[i]
         [name, filename] = file.split(":")
         
-        data_file = open(filename, 'rb')
+        data_file = open(filename, 'r')
         csv_reader = csv.reader(data_file, delimiter=',', quotechar='"')
         # The replace is needed because the variable names in the source csv files
         # use "." instead of "_" even though the variable name in the codebook has
         # "_"                  
-        title_row = [x.upper().replace(".", "_") for x in csv_reader.next()]   
+        title_row = [x.upper().replace(".", "_") for x in next(csv_reader)]   
         data_rows = [row for row in csv_reader]
         
         if "SEQN" in title_row:
             seqn_col = title_row.index("SEQN")
         else:
-            print "Error: Cannot load weights for variable " + name + " because SEQN is missing from its datafile " + filename
+            print("Error: Cannot load weights for variable " + name + " because SEQN is missing from its datafile " + filename)
             sys.exit(1)
                            
         if name in title_row:                  
             var_col = title_row.index(name)       
         else:
-            print "Error: Cannot load weights for variable " + name + " because the values are missing from its datafile " + filename
+            print("Error: Cannot load weights for variable " + name + " because the values are missing from its datafile " + filename)
             sys.exit(1)
                          
         for row in data_rows:
@@ -116,7 +116,7 @@ for i in range(0, count):
     name = all_var_names[i]
     title_line = title_line + "," + name
              
-print "Writing merged weights..."
+print("Writing merged weights...")
 weights_filename = out_folder + "/" + csv_file
 weights_file = open(weights_filename, 'w')
 weights_file.write(title_line + "\n")
@@ -129,7 +129,7 @@ for seqn in list_seqn:
     for i in range(0, count):
         colCount = colCount + 1        
         vali = all_var_values[i] 
-        if vali.has_key(seqn):                
+        if seqn in vali:                
             if vali[seqn] == "NA" or vali[seqn] == "":
                 line = line + ",NA"
             else:        
@@ -142,9 +142,9 @@ for seqn in list_seqn:
     rowCount = rowCount + 1
     weights_file.write(line + "\n")
 weights_file.close()
-print "Done: written",rowCount,"rows and",count,"columns."
+print("Done: written",rowCount,"rows and",count,"columns.")
 
-print "Writing metadata for merged weights..."
+print("Writing metadata for merged weights...")
 
 sample_xml_lines = []
 dietary_xml_lines = []
@@ -169,7 +169,7 @@ for var in weights_files:
             full_name = "Full Sample " + year_str + " MEC Exam Weight"        
         else:
             full_name = "Full Sample " + year_str + " Weight"
-            print "  Warning: Full sample weight that is neither Interview nor MEC"
+            print("  Warning: Full sample weight that is neither Interview nor MEC")
         
     line = '    <var include="yes" weight="yes" subsample=' + subsample_str + '><short>' + short_name + '</short><full>' + full_name + '</full><type>float</type><range>' + var_range + '</range><datafile>' + weights_filename + '</datafile></var>'
 
@@ -209,7 +209,7 @@ xml_file.close()
 try:
     doc = parseString(''.join(xml_strings))
     doc.toxml()
-    print "Done."    
+    print("Done.")
 except:
     sys.stderr.write("XML validation error:\n")
     raise

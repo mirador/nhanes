@@ -109,8 +109,8 @@ def calculate(values):
     age = values["RIDAGEYR"]
     bmi = values["BMXBMI"]
     
-    if '\N' in [gender, age, bmi]:
-        obesity = '\N'
+    if 'NA' in [gender, age, bmi]:
+        obesity = 'NA'
     else:
         age = int(age)
         
@@ -126,7 +126,7 @@ def calculate(values):
                 obesity = 1
                 
         elif age < 2:
-            obesity = '\N'
+            obesity = 'NA'
         
         else:
             # Age is between 2 and 19

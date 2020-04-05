@@ -1,67 +1,54 @@
 '''
 Downloads all the XPT files in the specified URL, and stores them in the
-destination folder. Two arguments are mandatory: first: the source url,
+destination folder. Two arguments are mandatory: first: the desired NHANES cycle,
 and second, the destination folder. 
 
 @copyright: Fathom Information Design 2014
 '''
 
 import sys
-from ftplib import FTP
 import os.path
+from bs4 import BeautifulSoup
+import requests
+import urllib
 
-def download_binary(block):
-    ofile.write(block)
+def request_file(src_url, dest_fn):
+    try:
+        r = requests.get(src_url, stream = True)
+        with open(dest_fn, 'wb') as f:
+            for ch in r:
+                f.write(ch)
+    except:
+        print("  Failed downloading file", src_url, ", canceling!")
+        sys.exit()
 
-# src_url should be a string of the form:
-# "ftp://ftp.cdc.gov/pub/Health_Statistics/NCHS/nhanes/2009-2010/"
-src_url  = sys.argv[1]
+components = ["Demographics", "Dietary", "Examination", "Laboratory", "Questionnaire"]
+
+cycle = sys.argv[1]
 dest_dir = sys.argv[2]
 
-if src_url[len(src_url) - 1] != '/': src_url = src_url + '/'
-if dest_dir[len(dest_dir) - 1] != '/': dest_dir = dest_dir + '/'
+begin_year = cycle.split('-')[0]
 
-if src_url.find("ftp://") == 0:
-    # Chopping off the protocol string
-    src_url = src_url[6:len(src_url)]
+print("Getting XPT files for cycle " + cycle + "...")
 
-n = src_url.find("/")
-ftp_host = src_url[0:n]
-src_dir  = src_url[n:len(src_url)]
+base_url = "https://wwwn.cdc.gov"
+url_template = "https://wwwn.cdc.gov/nchs/nhanes/Search/DataPage.aspx?Component=${comp}&CycleBeginYear=${year}"
 
-# Anonymoyus login to the provided host
-print "Opening connection with", ftp_host, "..."
-ftp = FTP(ftp_host)
-ftp.login()
-print "Done."
+for comp in components:
+    url = url_template.replace("${comp}", comp).replace("${year}", begin_year)
+    print(comp, "component")
+    content = urllib.request.urlopen(url).read()
+    soup = BeautifulSoup(content, features="lxml")
+    table = soup.find( "table")
+    
+    for a in table.find_all("a", href=True):
+        url = a["href"]
+        name = os.path.split(url)[1]
+        ext  = os.path.splitext(name)[1].lower()
+        if ext == ".xpt":
+            dest_fn = os.path.join(dest_dir, name)
+            full_url = base_url + url
+            print("  ", full_url, "...", dest_fn)
+            request_file(full_url, dest_fn)
 
-print "Getting XPT files..."
-
-if not os.path.exists(dest_dir):
-    os.makedirs(dest_dir)
-
-files = ftp.nlst(src_dir)
-for f in files:
-    name = os.path.split(f)[1]
-    ext  = os.path.splitext(name)[1].lower()   
-    if ext == ".xpt":    
-        fn = os.path.join(dest_dir, name)
-        print "  ", f, "..."
-        ofile = open(fn, "wb")
-        
-        for i in range(0, 5):
-            try:
-                ftp.retrbinary("RETR " + f, download_binary)
-                break; 
-            except:
-                if i < 5 - 1: print "  Could not open",f,"at",ftp_host,", will try again"
-                else:
-                    print "  Failed opening",f,"at",ftp_host,"after 5 attempts, canceling!"
-                    sys.exit()
-
-        ofile.close()
-
-ftp.close()
-print "Done."
-
-
+print("Done.")

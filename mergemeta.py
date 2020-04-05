@@ -10,7 +10,7 @@ import xml.etree.ElementTree as ET
 from xml.dom.minidom import parseString
 
 def load_varequiv(fn):
-  ifile = open(fn, 'rb')
+  ifile = open(fn, 'r')
   old_to_new = {}
   new_to_old = {}
   for line in ifile.readlines():
@@ -60,7 +60,7 @@ def get_variables(xml, var_names, var_types, var_ranges, var_files, var_weights,
 def write_xml_line(line):
     ascii_line = ''.join(char for char in line if ord(char) < 128)
     if len(ascii_line) < len(line):
-        print "  Warning: Non-ASCII character found in line: '" + line.encode('ascii', 'ignore') + "'"
+        print("  Warning: Non-ASCII character found in line: '" + line.encode('ascii', 'ignore') + "'")
     xml_file.write(ascii_line + '\n')
     xml_strings.append(ascii_line + '\n')
 
@@ -124,7 +124,7 @@ def get_weight_vars(filename):
                     if child.tag == "short":  
                         wname = child.text        
                     if child.tag == "datafile":
-                        wfile = child.text        
+                        wfile = child.text
                 vars[wname] = [wfile, subsample]
     return vars    
 
@@ -141,7 +141,7 @@ equiv_file = sys.argv[6]
 [year0, year1] = [int(x) for x in aggr_cycles.split("-")]
 inc_4yr = year0 == 1999
 year_diff = (year1 - year0 + 1)
-num_cycles = year_diff / 2
+num_cycles = int(year_diff / 2)
 in_folders = [""] * num_cycles
 cycle_string = str(year_diff) + "YR"
 
@@ -175,7 +175,7 @@ all_weights = [{} for f in in_folders]
 
 cycle_weights = [{} for f in in_folders]
 
-print "Reading input metadata..."
+print("Reading input metadata...")
 for i in range(0, num_cycles):
     folder = in_folders[i]
     xml_filename = os.path.join(folder, meta_file)
@@ -219,13 +219,13 @@ for i in range(0, num_cycles):
                 else:
                     all_weights[i][sname] = [None, None, None]
                 
-print "Merging metadata..."
+print("Merging metadata...")
 
 # Get variables common to all cycles
 common = set.intersection(*all_vars)
-print "Found",len(common),"common variables."
+print("Found", len(common), "common variables.")
 
-print "Merging weights..."
+print("Merging weights...")
 
 new_weights = {}
 new_weights_factors = {}
@@ -284,7 +284,7 @@ for nam in common:
 
     if -1 < weight_name.find("2YR"): weight_name = weight_name.replace("2YR", cycle_string)
     elif -1 < weight_name.find("4YR"): weight_name = weight_name.replace("4YR", cycle_string)
-    else: print "  Warning: weight variable for variable " + nam + " doesn't have a standard name: " + weight_name
+    else: print("  Warning: weight variable for variable " + nam + " doesn't have a standard name: " + weight_name)
     
     # Checking if the weight variable is new, and updating name if necessary
     if weight_name in new_weights:
@@ -300,7 +300,7 @@ for nam in common:
                     break
             if not found:         
                 # Didn't find any weight variable with the same definition 
-                letters = map(chr, range(65, 91))
+                letters = list(map(chr, range(65, 91)))
                 ll = len(letters)
                 weight_name_b = weight_name
                 i = 0
@@ -321,7 +321,7 @@ for nam in common:
     common_weights[nam] = weight_name
 
 for nam in toRemove:
-    print "  Warning: Removing common variable " + nam + " because its missing a weight file"
+    print("  Warning: Removing common variable " + nam + " because its missing a weight file")
     common.remove(nam)
             
 wfile = open(out_folder + "/weights.list", "w")
@@ -329,7 +329,7 @@ for wname in new_weights:
     wfile.write(wname + "\t" + new_weights[wname] + "\t" + new_weights_factors[wname] + "\t" + new_weights_subsamples[wname] + "\n")
 wfile.close()
 
-print "Writing merged metadata..."
+print("Writing merged metadata...")
 
 # Make list of variables per table
 tables = {}
@@ -369,19 +369,19 @@ for tab in tables:
             typ = all_types[i][short_name]
             if typ == "time" or typ == "recorded":
                 skip_var = 1
-                print "  Warning: Skipping common variable " + short_name + " (" + full_name + ") because its type is " + typ + ". Only integer, float, or category variables will be merged."
+                print("  Warning: Skipping common variable " + short_name + " (" + full_name + ") because its type is " + typ + ". Only integer, float, or category variables will be merged.")
                 break
             if var_type != typ:
                 if (var_type == "integer" and typ == "float") or (var_type == "float" and typ == "integer"):
                     var_type = "float"
                 else:    
                     skip_var = 1
-                    print "  Warning: Skipping common variable " + short_name + " (" + full_name + ") because its type across datasets is not consistent: " + var_type + " and " + typ
+                    print("  Warning: Skipping common variable " + short_name + " (" + full_name + ") because its type across datasets is not consistent: " + var_type + " and " + typ)
                     break
             var_range = add_range(var_range, all_ranges[i][short_name], var_type)
             if not var_range:
-                print "  Warning: Skipping common variable " + short_name + " (" + full_name + ") because cannot add the range:"
-                print all_ranges[i][short_name]
+                print("  Warning: Skipping common variable " + short_name + " (" + full_name + ") because cannot add the range:")
+                print(all_ranges[i][short_name])
                 continue
             
         equiv_names = ""
@@ -403,7 +403,7 @@ xml_file.close()
 try:
     doc = parseString(''.join(xml_strings))
     doc.toxml()
-    print "Done."    
+    print("Done.")
 except:
     sys.stderr.write("XML validation error:\n")
     raise

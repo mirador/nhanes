@@ -8,7 +8,7 @@ files for subsequent parsing.
 import sys, os, subprocess
 
 def run_command(cmd):
-    sproc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    sproc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding='utf8')
     sproc.wait()
     outfile.write("******************************************************************************************\n")    
     outfile.write(cmd + "\n")
@@ -16,22 +16,22 @@ def run_command(cmd):
     outfile.write("------------------------------------------------------------------------------------------\n")
     outfile.close()
     if sproc.returncode:
-        print "AN ERROR OCURRED!"
-        print "Command: " + cmd
-        print "Error message saved to file " + error_filename 
+        print("AN ERROR OCURRED!")
+        print("Command: " + cmd)
+        print("Error message saved to file " + error_filename)
         errorfile = open(error_filename, "w")
         errorfile.write("Command: " + cmd + "\n")
-        errorfile.writelines(sproc.stderr.readlines())
+        lines = sproc.stderr.readlines()
+        errorfile.writelines(lines)
         errorfile.close()
         exit(1)        
 
 cycle = sys.argv[1]
 
-ftp_folder = "ftp://ftp.cdc.gov/pub/Health_Statistics/NCHS/nhanes/" + cycle
 xpt_folder = "data/sources/xpt/" + cycle
 csv_folder = "data/sources/csv/" + cycle
 
-print "GETTING NHANES FILES FOR", cycle, "CYCLE:"
+print("GETTING NHANES FILES FOR", cycle, "CYCLE:")
 
 if not os.path.exists(xpt_folder):
     os.makedirs(xpt_folder)
@@ -46,9 +46,9 @@ outfile = open(output_filename, "w")
 errorfile = open(error_filename, "w")
 errorfile.close()
 
-print "DOWNLOADING XPT FILES..."
+print("DOWNLOADING XPT FILES...")
 outfile.write("DOWNLOADING XPT FILES...\n")
-cmd = "python download.py " + ftp_folder + " " + xpt_folder
+cmd = "python download.py " + cycle + " " + xpt_folder
 run_command(cmd)
 
 output_filename0 = output_filename
@@ -59,10 +59,10 @@ outfile = open(output_filename, "w")
 errorfile = open(error_filename, "w")
 errorfile.close()
 
-print "CONVERTING XPT FILES TO CSV..."
+print("CONVERTING XPT FILES TO CSV...")
 outfile.write("CONVERTING XPT FILES TO CSV...\n")
 cmd = "python xpt2csv.py " + xpt_folder + " " + csv_folder
 run_command(cmd)
 
-print cycle,"DOWNLOAD AND CONVERSION COMPLETED."
-print "Detailed messages saved to files " + output_filename0 + " and " + output_filename
+print(cycle,"DOWNLOAD AND CONVERSION COMPLETED.")
+print("Detailed messages saved to files " + output_filename0 + " and " + output_filename)

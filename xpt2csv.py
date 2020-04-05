@@ -4,8 +4,6 @@ uses R for the conversion, through the RPy2 interface:
 http://rpy.sourceforge.net/rpy2_documentation.html
 To install rpy2, run from the command line:
 easy_install rpy2
-The extension tsv is used instead of csv so the files
-are automatically opened by libreoffice.
 
 The Hmisc package should be installed in R:
 install.packages("Hmisc") (from R)
@@ -23,7 +21,7 @@ csv_dir = sys.argv[2]
 if not os.path.exists(csv_dir):
     os.makedirs(csv_dir)
 
-print "Converting XPT files to CSV..."
+print("Converting XPT files to CSV...")
 
 robjects.r("library(Hmisc)")
 files = os.listdir(xpt_dir)
@@ -38,5 +36,5 @@ for f in files:
         try:
             robjects.r('write.csv(file_data, file = "' + csv_fn + '", row.names = FALSE)')
         except:
-            print "Error converting " + xpt_fn + " to CSV, skipping."
-print "Done."
+            print("Error converting " + xpt_fn + " to CSV, skipping.")
+print("Done.")
