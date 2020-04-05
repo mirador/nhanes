@@ -53,27 +53,27 @@ def validate_values(data, typ, rang):
             try:
                 val = float(d)
             except ValueError:
-                print "  In variable " + var + " the value " + d + " is not a valid number"
+                print("  In variable " + var + " the value " + d + " is not a valid number")
                 return False  
             if not ((math.floor(rang[0]) <= val and val <= math.ceil(rang[1])) or (2 < len(rang) and val in rang[2:len(rang)])):
-                print "  In variable " + var + " the value " + str(val) + " is outside the range [" + ",".join([str(x) for x in rang]) + "]"
+                print("  In variable " + var + " the value " + str(val) + " is outside the range [" + ",".join([str(x) for x in rang]) + "]")
                 return False
         elif typ == "integer":            
             if -1 < d.find("."):
-                print "  In integer variable " + var + " the value " + d + " contains a decimal part"
+                print("  In integer variable " + var + " the value " + d + " contains a decimal part")
                 return False
             else: 
                 try:
                     val = int(d)
                 except ValueError:
-                    print "  In variable " + var + " the value " + d + " is not a valid number"
+                    print("  In variable " + var + " the value " + d + " is not a valid number")
                     return False
                 if not (rang[0] <= val and val <= rang[1] or (2 < len(rang) and val in rang[2:len(rang)])):
-                    print "  In variable " + var + " the value " + str(val) + " is outside the range [" + ",".join([str(x) for x in rang]) + "]"
+                    print("  In variable " + var + " the value " + str(val) + " is outside the range [" + ",".join([str(x) for x in rang]) + "]")
                     return False
         elif typ == "category":            
             if not d in rang: 
-                print "  In variable " + var + " the value + '" + d + "' is outside the range [" + ",".join([str(x) for x in rang]) + "]"
+                print("  In variable " + var + " the value + '" + d + "' is outside the range [" + ",".join([str(x) for x in rang]) + "]")
                 return False
 
     return True
@@ -83,7 +83,7 @@ xml_filename = sys.argv[1]
 tree = ET.parse(xml_filename)
 root = tree.getroot()
 
-print "Validating metadata file " + xml_filename + "..." 
+print("Validating metadata file " + xml_filename + "...")
 
 all_ok = True
 for table in root: 
@@ -102,28 +102,28 @@ for table in root:
         if var_names != []:
             var_loaded = {}
             if len(var_filenames) == 0:
-                print "  Didn't find any datafiles"
+                print("  Didn't find any datafiles")
                 all_ok = False
                 continue
                     
             for filename in var_filenames:
                 if not os.path.exists(filename):
-                    print "  Didn't find datafile " + filename
+                    print("  Didn't find datafile " + filename)
                     all_ok = False
                     continue
  
                 name_ext = os.path.split(filename)[1]
                 tname = name_ext.split(".")[0]
                             
-                csv_file = open(filename, 'rb') 
+                csv_file = open(filename, 'r') 
                 csv_reader = csv.reader(csv_file, delimiter=',', quotechar='"')
                 # The replace is needed because the variable names in the source csv files
                 # use "." instead of "_" even though the variable name in the codebook has
                 # "_"                
-                title_row = [x.upper().replace(".", "_") for x in csv_reader.next()]
+                title_row = [x.upper().replace(".", "_") for x in next(csv_reader)]
 
                 # Transpose the rows: 
-                columns = zip(*csv_reader)
+                columns = list(zip(*csv_reader))
 
                 for var in var_names:
                     vars = [var] + var_equiv[var]
@@ -147,10 +147,10 @@ for table in root:
                 
             for var in var_names:
                if not var_loaded.get(var, False):
-                   print "  Variable " + var + " is missing from " + ",".join(list(var_filenames))
+                   print("  Variable " + var + " is missing from " + ",".join(list(var_filenames)))
                    all_ok = False
 
 if all_ok:
-    print "Done: No problems detected."
+    print("Done: No problems detected.")
 else: 
-    print "Done: Some problems detected."
+    print("Done: Some problems detected.")

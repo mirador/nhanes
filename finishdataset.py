@@ -9,7 +9,7 @@ import sys, os
 import shutil
 
 def load_workfiles():
-  ifile = open('components', 'rb')
+  ifile = open('components', 'r')
   workfiles = []
   for line in ifile.readlines():
       line = line.strip()
@@ -37,7 +37,7 @@ output_folder = "data/mirador/" + cycle
 output_filename = output_folder + "/process.out"
 error_filename = output_folder + "/error.out"
 
-print "PREPARING", cycle, "MIRADOR DATASET FOR RELEASE..."
+print("PREPARING", cycle, "MIRADOR DATASET FOR RELEASE...")
 
 if not keep_workfiles:
     # Removing temporary work files...
@@ -72,4 +72,4 @@ for line in lines:
 template_file.close()
 project_file.close()
 
-print cycle,"DATASET READY."
+print(cycle, "DATASET READY.")

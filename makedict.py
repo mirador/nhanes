@@ -46,15 +46,15 @@ in_metadata = sys.argv[2:argc - 2]
 data_file = sys.argv[argc - 2]
 dict_file = sys.argv[argc - 1]
 
-print "Loading data..."
+print("Loading data...")
 data_filename = os.path.abspath(os.path.join(data_folder, data_file))
-csv_file = open(data_filename, 'rb')
+csv_file = open(data_filename, 'r')
 csv_reader = csv.reader(csv_file, delimiter='\t', quotechar='"')
-title_row = csv_reader.next()
+title_row = next(csv_reader)
 csv_file.close()                  
-print "Done."
+print("Done.")
 
-print "Loading metadata..."
+print("Loading metadata...")
 var_names = []
 var_aliases = {}
 var_types = {}  
@@ -72,13 +72,13 @@ for meta in in_metadata:
               if child.tag == "var":
                   if child.attrib["include"] == "yes":
                       get_variables(child, var_names, var_aliases, var_types, var_ranges, var_weights)
-print "Done."
+print("Done.")
 
-print "Creating dictionary file..."
+print("Creating dictionary file...")
 dict_filename = os.path.abspath(os.path.join(data_folder, dict_file))
 dfile = open(dict_filename, 'w')
 for name in title_row:
     line = var_aliases[name] + '\t' + var_types[name] + '\t' + var_ranges[name] + '\t' + var_weights[name] + '\n'
     dfile.write(line)  
 dfile.close()
-print "Done."
+print("Done.")
