@@ -250,9 +250,9 @@ file provide alongside the scripts
 
 **1)** Relevant links on NHANES weighting:
 
-http://www.cdc.gov/nchs/tutorials/nhanes/SurveyDesign/Weighting/intro.htm
-http://www.cdc.gov/nchs/tutorials/NHANES/SurveyDesign/Weighting/OverviewKey.htm
-http://www.cdc.gov/nchs/tutorials/NHANES/SurveyDesign/Weighting/OverviewExamples.htm
-http://www.cdc.gov/nchs/tutorials/dietary/SurveyOrientation/SurveyDesign/Info2.htm
-http://www.cdc.gov/nchs/data/nhanes/analyticnote_2007-2010.pdf
-http://www.cdc.gov/nchs/tutorials/nhanes/SurveyDesign/Weighting/Task2.htm
+* [Introduction to Specifying Weighting Parameters](http://www.cdc.gov/nchs/tutorials/nhanes/SurveyDesign/Weighting/intro.htm)
+* [Key Concepts About Weighting in NHANES](http://www.cdc.gov/nchs/tutorials/NHANES/SurveyDesign/Weighting/OverviewKey.htm)
+* [Examples Demonstrating Importance of Using Weights](http://www.cdc.gov/nchs/tutorials/NHANES/SurveyDesign/Weighting/OverviewExamples.htm)
+* [Key Concepts About the NHANES Sample Weights](http://www.cdc.gov/nchs/tutorials/dietary/SurveyOrientation/SurveyDesign/Info2.htm)
+* [2007-2010 Survey Design Changes and Combining Data Across other Survey Cycles](http://www.cdc.gov/nchs/data/nhanes/analyticnote_2007-2010.pdf)
+* [When and How to Construct Weights When Combining Survey Cycles](http://www.cdc.gov/nchs/tutorials/nhanes/SurveyDesign/Weighting/Task2.htm)
