@@ -32,6 +32,12 @@ def is_number(s):
     except ValueError:
         return False
 
+def replace_xml_specials(str):
+    # http://xml.silmaril.ie/specials.html
+    str = str.replace("<", "&lt;")
+    str = str.replace("&", "&amp;")
+    return str
+
 def clean_xml_string(str):
     # Removing EOL characters 
     str = str.replace("\r", "").replace("\n", "")
@@ -41,7 +47,7 @@ def clean_xml_string(str):
     # Likewise for the '&' character
     str = str.replace("&", "and")
     # Removing the ":" and ";" characters, used to separate the data values
-    str = str.replace(";", "").replace(":", "");
+    str = str.replace(";", "").replace(":", "")
     return str
 
 def var_inside_file(datafile, name):
@@ -120,6 +126,7 @@ def get_variable_type_and_range(short_name, full_name, table, datafile):
             if val_code != "." and val_desc != "Missing":
                 if var_range == None: var_range = "" 
                         
+                val_code = replace_xml_specials(val_code)
                 val_desc = clean_xml_string(val_desc)
 						
                 if var_type != "integer":
