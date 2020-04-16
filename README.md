@@ -12,15 +12,15 @@ grouping structure can be used as input for visualization with Mirador.
 
 The scripts have the following dependencies:
 
-1. Python 3 (not compatible with 2.x) and the following packages:
+1. Python 3.7 or higher (not compatible with 2.x, tested with 3.7.5) and the following packages:
   * rpy2: http://rpy.sourceforge.net/rpy2_documentation.html 
   * BeautifulSoup: http://www.crummy.com/software/BeautifulSoup
   * Requests: http://docs.python-requests.org/en/latest/index.html
   * lxml: https://lxml.de/
   * These dependencies can be installed by running:<br> 
   `pip install -r requirements.txt`
-2. [R](https://www.r-project.org/) (tested version 3.6.1), together with the Hmisc package: https://cran.r-project.org/web/packages/Hmisc/index.html
-3. A convenient way to install all of the software mentioned above is through the [Anaconda Python/R distribution](https://www.anaconda.com/distribution/), or with the minimal version of Anaconda, called [Miniconda](https://docs.conda.io/en/latest/miniconda.html). In the latter case, you will still have to run `pip install -r requirements.txt` to install the additional Python dependencies (not included in Miniconda), as well as R and hmisc manually, which can be easily done with the conda package management tool included with Minconda. This involves running the two following commands:<br>
+2. [R](https://www.r-project.org/) (tested with version 3.6.1), and the Hmisc package: https://cran.r-project.org/web/packages/Hmisc/index.html
+3. A convenient way to install all of the software tools mentioned above is through the [Anaconda Python/R distribution](https://www.anaconda.com/distribution/), or with the minimal version of Anaconda, called [Miniconda](https://docs.conda.io/en/latest/miniconda.html). In the latter case, you will still have to run `pip install -r requirements.txt` to install the additional Python dependencies (not included in Miniconda), as well as R and hmisc manually, which can be easily done with the conda package management tool included with Miniconda. This involves running the two following commands:<br>
 `conda install r-core`<br>
 `conda install r-hmisc`
 
