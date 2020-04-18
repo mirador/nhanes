@@ -1,3 +1,4 @@
+.DS_Store
 data/
 composites/obesity.pyc
 composites/__pycache__/
