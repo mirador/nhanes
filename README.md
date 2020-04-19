@@ -151,6 +151,8 @@ python makemeta.py 1999-2000 Laboratory data/sources/csv/1999-2000 data/mirador/
 python makemeta.py 1999-2000 Questionnaire data/sources/csv/1999-2000 data/mirador/1999-2000/question.xml -nodetails
 ```
 
+Also, make sure of creating the mirador data folder, as these scripts will not create it if it is missing. In this case, the path would be `data/mirador/1999-2000`.
+
 **4)** Validate metadata:
 
 ```bash
