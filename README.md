@@ -99,6 +99,8 @@ same dataset folder.
 python composite.py data/mirador/1999-2000 composites/obesity.py _obesity
 ```
 
+Note that there is no need to finalize the dataset after adding a composite variable. The composite script upadtes all required files in the dataset so it can be used righ away without further processing steps.
+
 ### ADVANCED USE
 
 #### STEP BY STEP EXECUTION

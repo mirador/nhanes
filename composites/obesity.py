@@ -48,9 +48,6 @@ def init():
             sum = sum + bmi
         sum = sum / len(maleCutoff95sum[yr])
         maleCutoff95[yr] = sum
-        
-#     print maleCutoff85       
-#     print maleCutoff95
     
     females = []       
     with open("females.tsv") as tsv:

@@ -45,7 +45,7 @@ grpfile = mira_path + "/groups.xml"
 binfile = mira_path + "/data.bin"
 
 if overwrite and os.path.isfile(binfile):
-        os.remove(binfile)
+    os.remove(binfile)
 
 if overwrite:
     datafile1 = datafile
@@ -59,11 +59,16 @@ else:
 data = []
 dict = []
 with open(datafile, 'r') as tsv:
-    for row in csv.reader(tsv, dialect="excel-tab"):        
+    for row in csv.reader(tsv, dialect="excel-tab"):
         data.append(row)
 titles = [str(x) for x in data[0]]
 
 variables = module.variables()
+for var in variables:
+    if not var in titles:
+        print("ERROR: the variable", var, "is required to calculate", module.get_name(), " but is not present in the dataset")
+        sys.exit(1)
+
 var_weights = {}
 weight_types = {}
 with open(dictfile) as tsv:
