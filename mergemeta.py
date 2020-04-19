@@ -9,6 +9,19 @@ import sys, os, csv, math, codecs
 import xml.etree.ElementTree as ET
 from xml.dom.minidom import parseString
 
+def load_components():
+  ifile = open('components', 'r')
+  components = []
+  for line in ifile.readlines():
+      line = line.strip()
+      if line == "" or line[0] == "#": continue
+      parts = line.split()
+      if len(parts) == 2:
+          comp_name = parts[0]
+          components.append(comp_name)
+  ifile.close()
+  return components
+
 def load_varequiv(fn):
   ifile = open(fn, 'r')
   old_to_new = {}
@@ -151,7 +164,7 @@ for cycle in range(num_cycles - 1, -1, -1):
     cy1 = cy0 + 1
     in_folders[num_cycles - cycle - 1] = base_folders + "/" + str(cy0) + "-" + str(cy1)
 
-data_components = ["Demographics", "Dietary", "Examination", "Laboratory", "Questionnaire"]
+data_components = load_components()
 [new_names, old_names] = load_varequiv(equiv_file)
 
 if not data_component in data_components:

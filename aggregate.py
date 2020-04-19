@@ -95,7 +95,7 @@ for meta in in_metadata:
                       print("  Warning: File " + filename + " is missing, won't add values for variables " + ",".join(list(var_files[filename])))
                       continue              
                     
-                  csv_file = open(filename, 'r')
+                  csv_file = open(filename, 'r', encoding='latin1')
                   csv_reader = csv.reader(csv_file, delimiter=',', quotechar='"')
                   # The replace is needed because the variable names in the source csv files
                   # use "." instead of "_" even though the variable name in the codebook has

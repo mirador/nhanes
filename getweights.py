@@ -22,6 +22,19 @@ import requests
 from bs4 import BeautifulSoup
 from xml.dom.minidom import parseString
 
+def load_components():
+  ifile = open('components', 'r')
+  components = []
+  for line in ifile.readlines():
+      line = line.strip()
+      if line == "" or line[0] == "#": continue
+      parts = line.split()
+      if len(parts) == 2:
+          comp_name = parts[0]
+          components.append(comp_name)
+  ifile.close()
+  return components
+
 def is_number(s):
     try:
         float(s)
@@ -42,7 +55,7 @@ def clean_xml_string(str):
     return str
 
 def int_or_float(datafile, name):
-    file = open(datafile, 'r') 
+    file = open(datafile, 'r', encoding='latin1') 
     reader = csv.reader(file, delimiter=',', quotechar='"')
     # The replace is needed because the variable names in the source csv files
     # use "." instead of "_" even though the variable name in the codebook has
@@ -291,8 +304,7 @@ html_parser    = "html.parser"
 if len(sys.argv) == 6 and sys.argv[4] == "-parser":
     html_parser = sys.argv[5]   
 
-# data_components = ["Demographics", "Dietary", "Examination", "Laboratory", "Questionnaire"]
-data_components = ["Demographics", "Examination", "Laboratory", "Questionnaire"]
+data_components = load_components()
 begin_year = data_cycle.split("-")[0]
 
 sample_weights = ["WTINT2YR", "WTMEC2YR", "WTINT4YR", "WTMEC4YR"]

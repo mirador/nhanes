@@ -1,12 +1,6 @@
 ## NHANES DATA SCRIPTS 
 
-This set of Python scripts downloads, parses, and aggregates the public data from the 
-[National Health and Nutrition Examination Survey](http://www.cdc.gov/nchs/nhanes.htm) 
-(NHANES), and outputs several files, among them a tsv table containing all the data 
-aggregated into a single file, and xml files holding the variable metadata from the online 
-codebooks. The data tsv file together with the dictionary file and a xml file with the 
-grouping structure can be used as input for visualization with Mirador.
-
+This set of Python scripts downloads, parses, and aggregates the public data from the [National Health and Nutrition Examination Survey](http://www.cdc.gov/nchs/nhanes.htm) (NHANES), and outputs several files, among them a tsv table containing all the data aggregated into a single file, and xml files holding the variable metadata from the online codebooks. The data tsv file together with the dictionary file and a xml file with the grouping structure can be used as input for visualization with Mirador.
 
 ### DEPENDENCIES
 
@@ -26,10 +20,7 @@ The scripts have the following dependencies:
 
 ### CREATING AND MERGING DATASETS
 
-The sequence of steps to generate a Mirador-valid dataset is to first download the 
-individual data files from the NHANES ftp server, and then run the scripts that parse and 
-aggregate these files into a single table. These scripts use the following folder 
-structure:
+The sequence of steps to generate a Mirador-valid dataset is to first download the  individual data files from the NHANES ftp server, and then run the scripts that parse and  aggregate these files into a single table. These scripts use the following folder structure:
 
 ```
 / root
@@ -50,14 +41,7 @@ structure:
                      ...   
 ```
 
-where root is the folder containing all the python scripts and associated files. The raw
-data from NHANES is provided in the SAS Transport Files (.xpt), which the download script
-stores in sources/xpt. These files are converted into Comma-Separated Values (.csv) files,
-which are created in the sources/csv folder. The dataset for each cycle will be stored in
-the corresponding subfolder under data/mirador, as shown in the diagram. Consecutive 
-cycles can also be aggregated into a single dataset, and the aggregation scripts take 
-into account properly merging the sample and subsample weights (see appendix), and also 
-the equivalence between variable names across cycles.
+where root is the folder containing all the python scripts and associated files. The raw data from NHANES is provided in the SAS Transport Files (.xpt), which the download script stores in sources/xpt. These files are converted into Comma-Separated Values (.csv) files, which are created in the sources/csv folder. The dataset for each cycle will be stored in the corresponding subfolder under data/mirador, as shown in the diagram. Consecutive cycles can also be aggregated into a single dataset, and the aggregation scripts take  into account properly merging the sample and subsample weights (see appendix), and also the equivalence between variable names across cycles.
 
 **1)** Downloads the data for a given cycle:
 
@@ -78,10 +62,7 @@ interval:
 python mergedatasets.py 1999-2010
 ```
 
-**4)** Finish dataset, by deleting temporary files and adding a Mirador configuration file. 
-Once finished, it cannot be used for merging, because the merging scripts use temporary 
-files that are removed by this step. The contents of the dataset folder are ready to load
-from Mirador:
+**4)** Finish dataset, by deleting temporary files and adding a Mirador configuration file. Once finished, it cannot be used for merging, because the merging scripts use temporary  files that are removed by this step. The contents of the dataset folder are ready to load from Mirador:
 
 ```bash
 python finishdataset.py 1999-2010
@@ -96,12 +77,7 @@ python finishdataset.py 1999-2010 -keep
 
 ### ADDING COMPOSITE VARIABLES
 
-Composite variables are defined as function of existing variables in the dataset, and they
-can be added by using the composite script and providing a python script that defines the
-functional relationship. This script must implement a series of functions to be properly
-executed by composite.py, a fully commented template is provided in 
-composites/template.py. The result of the calculation can simply overwrite the source 
-dataset, or stored in another set of data, dictionary, and grouping files.
+Composite variables are defined as function of existing variables in the dataset, and they can be added by using the composite script and providing a python script that defines the functional relationship. This script must implement a series of functions to be properly executed by composite.py, a fully commented template is provided in composites/template.py. The result of the calculation can simply overwrite the source  dataset, or stored in another set of data, dictionary, and grouping files.
 
 **1)** Adding a composite, overwriting the original dataset
 
@@ -121,10 +97,7 @@ python composite.py data/mirador/1999-2000 composites/obesity.py _obesity
 
 #### STEP BY STEP EXECUTION
 
-The getdata, makedataset, and mergedatasets scripts execute several intermediate steps, 
-which can be run individually in the case an error occurs and one needs to isolate the 
-source of the problem, and also to have more control on the location where the files are
-stored, etc. 
+The getdata, makedataset, and mergedatasets scripts execute several intermediate steps, which can be run individually in the case an error occurs and one needs to isolate the  source of the problem, and also to have more control on the location where the files are stored, etc. 
 
 **1)** Download data:
 
@@ -238,15 +211,11 @@ python checkdata.py data/mirador/1999-2010 demo.xml lab.xml exam.xml question.xm
 
 #### CUSTOM HTML PARSERS
 
-The getweights.py and makemeta.py scripts parse the online NHANES codebooks using the 
-BeautifulSoup library, and can use a custom HTML parser, specified the -parser option, 
-and chose among the ones listed in [this page](http://www.crummy.com/software/BeautifulSoup/bs4/doc/#installing-a-parser). 
-The default is html.parser, the other ones (html5lib, lxml) need to be installed separately.
+The getweights.py and makemeta.py scripts parse the online NHANES codebooks using the  BeautifulSoup library, and can use a custom HTML parser, specified the -parser option, and chose among the ones listed in [this page](http://www.crummy.com/software/BeautifulSoup/bs4/doc/#installing-a-parser). The default is html.parser, the other ones (html5lib, lxml) need to be installed separately.
 
 #### ADDING/REMOVING COMPONENTS
 
-The NHANES components to use in the parsing/aggregation can be set by editing the components
-file provide alongside the scripts
+The NHANES components to use in the parsing/aggregation can be set by editing the components file provide alongside the scripts
 
 ### APPENDIX
 

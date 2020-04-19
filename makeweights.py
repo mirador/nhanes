@@ -70,7 +70,7 @@ for var in weights_files:
         factor = factors[i]
         [name, filename] = file.split(":")
         
-        data_file = open(filename, 'r')
+        data_file = open(filename, 'r', encoding='latin1')
         csv_reader = csv.reader(data_file, delimiter=',', quotechar='"')
         # The replace is needed because the variable names in the source csv files
         # use "." instead of "_" even though the variable name in the codebook has

@@ -25,6 +25,19 @@ from bs4 import BeautifulSoup
 from xml.dom.minidom import parseString
 import xml.etree.ElementTree as ET
 
+def load_components():
+  ifile = open('components', 'r')
+  components = []
+  for line in ifile.readlines():
+      line = line.strip()
+      if line == "" or line[0] == "#": continue
+      parts = line.split()
+      if len(parts) == 2:
+          comp_name = parts[0]
+          components.append(comp_name)
+  ifile.close()
+  return components
+
 def is_number(s):
     try:
         float(s)
@@ -51,14 +64,14 @@ def clean_xml_string(str):
     return str
 
 def var_inside_file(datafile, name):
-    csv_file = open(datafile, 'r') 
+    csv_file = open(datafile, 'r', encoding='latin1') 
     csv_reader = csv.reader(csv_file, delimiter=',', quotechar='"')
     title_row = [x.upper().replace(".", "_") for x in next(csv_reader)]
     csv_file.close()
     return name in title_row
 
 def int_or_float(datafile, name):
-    file = open(datafile, 'r') 
+    file = open(datafile, 'r', encoding='latin1') 
     reader = csv.reader(file, delimiter=',', quotechar='"')
     # The replace is needed because the variable names in the source csv files
     # use "." instead of "_" even though the variable name in the codebook has
@@ -67,7 +80,7 @@ def int_or_float(datafile, name):
     if not name in title:
         file.close()
         return None    
-    col = title.index(name)         
+    col = title.index(name)
     type = "integer"     
     for row in reader:
         dat = row[col] 
@@ -211,7 +224,7 @@ for i in range(5, len(sys.argv)):
     elif sys.argv[i] == "-nodetails":
         print_detail_info = 0        
 
-data_components = ["Demographics", "Dietary", "Examination", "Laboratory", "Questionnaire"]
+data_components = load_components()
 sample_weights = ["WTINT2YR", "WTMEC2YR", "WTINT4YR", "WTMEC4YR"]
 
 xml_folder = os.path.split(xml_filename)[0]

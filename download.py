@@ -12,6 +12,19 @@ from bs4 import BeautifulSoup
 import requests
 import urllib
 
+def load_components():
+  ifile = open('components', 'r')
+  components = []
+  for line in ifile.readlines():
+      line = line.strip()
+      if line == "" or line[0] == "#": continue
+      parts = line.split()
+      if len(parts) == 2:
+          comp_name = parts[0]
+          components.append(comp_name)
+  ifile.close()
+  return components
+
 def request_file(src_url, dest_fn):
     try:
         r = requests.get(src_url, stream = True)
@@ -22,7 +35,7 @@ def request_file(src_url, dest_fn):
         print("  Failed downloading file", src_url, ", canceling!")
         sys.exit()
 
-components = ["Demographics", "Dietary", "Examination", "Laboratory", "Questionnaire"]
+components = load_components()
 
 cycle = sys.argv[1]
 dest_dir = sys.argv[2]

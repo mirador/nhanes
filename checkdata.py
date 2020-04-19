@@ -116,7 +116,7 @@ for var in title_row:
         if filename in source_data:
             [titles, rows] = source_data[filename]
         else:    
-            file = open(filename, 'r')
+            file = open(filename, 'r', encoding='latin1')
             reader = csv.reader(file, delimiter=',', quotechar='"')
             # The replace is needed because the variable names in the source csv files
             # use "." instead of "_" even though the variable name in the codebook has

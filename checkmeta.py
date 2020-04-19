@@ -115,7 +115,7 @@ for table in root:
                 name_ext = os.path.split(filename)[1]
                 tname = name_ext.split(".")[0]
                             
-                csv_file = open(filename, 'r') 
+                csv_file = open(filename, 'r', encoding='latin1') 
                 csv_reader = csv.reader(csv_file, delimiter=',', quotechar='"')
                 # The replace is needed because the variable names in the source csv files
                 # use "." instead of "_" even though the variable name in the codebook has
