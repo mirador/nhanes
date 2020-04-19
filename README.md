@@ -55,24 +55,22 @@ python getdata.py 1999-2000
 python makedataset.py 1999-2000
 ```
 
-**3)** Creates an aggregated dataset, by merging all the cycles encompassed by the specified
-interval:
+**3)** Finalize dataset, by deleting temporary files and adding a Mirador configuration file. Once finalized, it cannot be used for merging (see below), because the merging scripts use temporary files that are removed by this step. The contents of the dataset folder are ready to load from Mirador:
+
+```bash
+python finalizedataset.py 1999-2000
+```
+
+**4)** Once several consecutive cycles have been made, one can create an aggregated dataset, by merging all the cycles encompassed by the specified interval:
 
 ```bash
 python mergedatasets.py 1999-2010
 ```
 
-**4)** Finish dataset, by deleting temporary files and adding a Mirador configuration file. Once finished, it cannot be used for merging, because the merging scripts use temporary  files that are removed by this step. The contents of the dataset folder are ready to load from Mirador:
+As mentioned above, this has to be done before finalizing the individual cycles. If the merging operation has to be redone several times, once can add the `-keep` parameter when finalizing the datasets:
 
 ```bash
-python finishdataset.py 1999-2010
-```
-
-If the temporary files are needed to redo merging operations, once can add the -keep 
-parameter:
-
-```bash
-python finishdataset.py 1999-2010 -keep
+python finalizedataset.py 1999-2000 -keep
 ```
 
 ### ADDING COMPOSITE VARIABLES
