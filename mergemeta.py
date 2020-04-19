@@ -46,10 +46,10 @@ def get_variables(xml, var_names, var_types, var_ranges, var_files, var_weights,
     vranges = []
     vweight = ""
     for child in xml:
-        if child.tag == "short":             
-            vname = child.text           
+        if child.tag == "short":
+            vname = child.text
             if vname == 'SEQN' and not inc_seqn:
-                return 
+                return
         if child.tag == "full":
             vname_full = child.text
         if child.tag == "type":
@@ -57,18 +57,18 @@ def get_variables(xml, var_names, var_types, var_ranges, var_files, var_weights,
         if child.tag == "weight":
             if use_4yr:
                 vweight  = child.text.replace("2YR", "4YR")
-            else:        
+            else:
                 vweight  = child.text
-        if child.tag == "datafile":   
+        if child.tag == "datafile":
             var_files[vname] = child.text
         if child.tag == "range":
             rstr = child.text
             vranges = rstr.split(";")
-    if vname != "":        
+    if vname != "":
         var_names.append([vname, vname_full])
         var_types[vname] = vtype
         var_ranges[vname] = vranges
-        var_weights[vname] = vweight;
+        var_weights[vname] = vweight
 
 def write_xml_line(line):
     xml_file.write(line + '\n')
@@ -80,7 +80,7 @@ def add_range(range0, range1, typ):
         if 0 < len(range0):
             if typ == "integer":
                 interval0 = [int(x) for x in range0[0].split(',')]
-            else: 
+            else:
                 interval0 = [float(x) for x in range0[0].split(',')]
         else:
             interval0 = [float("inf"), float("-inf")]    
@@ -140,6 +140,14 @@ def get_weight_vars(filename):
 
 def make_range_string(range):
     return ';'.join(range)
+
+def sort_range_list(nam, range):
+    try:
+        range.sort(key=lambda val: int(val.split(":")[0]), reverse=False)
+    except ValueError:
+        print("  Warning: category variable " + nam + " cannot be re-ordered, some codes might not be numbers")
+        pass
+    return range
 
 meta_file = sys.argv[1]
 aggr_cycles = sys.argv[2]
@@ -401,7 +409,10 @@ for tab in tables:
                 if equiv_names != "": equiv_names = equiv_names + ";"
                 equiv_names = equiv_names + name
             equiv_names = "<old>" + equiv_names + "</old>"      
-                                            
+
+        if var_type == "category":
+            var_range = sort_range_list(short_name, var_range)
+
         if not skip_var:
             write_xml_line('    <var include="yes" weight="no"><short>' + short_name + '</short>' + equiv_names + '<full>' + full_name + '</full><type>' + var_type + '</type><range>' + make_range_string(var_range) + '</range><weight>' + common_weights[short_name] + '</weight><datafile>' + var_datafiles + '</datafile></var>')
 

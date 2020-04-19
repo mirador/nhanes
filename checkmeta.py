@@ -131,7 +131,7 @@ for table in root:
                     
                     for v in vars:
                         if -1 < v.find("."): 
-                            vparts = v.split(".");
+                            vparts = v.split(".")
                             v = vparts[0]
                             fn = vparts[1]
                             if tname != fn: continue

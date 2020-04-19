@@ -51,7 +51,7 @@ def clean_xml_string(str):
     # Likewise for the '&' character
     str = str.replace("&", "and")
     # Removing the ":" and ";" characters, used to separate the data values
-    str = str.replace(";", "").replace(":", "");
+    str = str.replace(";", "").replace(":", "")
     return str
 
 def int_or_float(datafile, name):

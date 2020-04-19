@@ -21,7 +21,7 @@ if len(sys.argv) == 4:
     append_str = sys.argv[3]    
 
 work_path = os.getcwd()
-[module_path, module_filename] = os.path.split(user_script);
+[module_path, module_filename] = os.path.split(user_script)
 
 module_path = os.path.abspath(module_path)
 module_filename = module_filename.split('.')[0]
@@ -136,7 +136,7 @@ for group in root.findall('group'):
 if comp_group is None:
     comp_group = ET.Element('group')
     comp_group.set("name", "Composites")
-    root.insert(len(root) - 1, comp_group);    
+    root.insert(len(root) - 1, comp_group)
 
 comp_table = None
 for table in comp_group.findall('table'):
