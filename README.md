@@ -7,9 +7,9 @@ This set of Python scripts downloads, parses, and aggregates the public data fro
 The scripts have the following dependencies:
 
 1. Python 3.7 or higher (not compatible with 2.x, tested with 3.7.5) and the following packages:
-  * rpy2: http://rpy.sourceforge.net/rpy2_documentation.html 
-  * BeautifulSoup: http://www.crummy.com/software/BeautifulSoup
-  * Requests: http://docs.python-requests.org/en/latest/index.html
+  * rpy2: https://rpy2.github.io/
+  * BeautifulSoup: https://www.crummy.com/software/BeautifulSoup/
+  * Requests: https://requests.readthedocs.io/
   * lxml: https://lxml.de/
   * These dependencies can be installed by running:<br> 
   `pip install -r requirements.txt`
