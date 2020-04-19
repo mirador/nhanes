@@ -24,11 +24,10 @@ def load_components():
   return [components, metadata]
 
 def run_command(cmd):
-    sproc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding='utf8')
-    sproc.wait()
+    sproc = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding='utf8')
     outfile.write("******************************************************************************************\n")    
     outfile.write(cmd + "\n")
-    outfile.writelines(sproc.stdout.readlines())
+    outfile.write(sproc.stdout)
     outfile.write("------------------------------------------------------------------------------------------\n")
     if sproc.returncode:
         print("AN ERROR OCURRED!")
@@ -36,7 +35,7 @@ def run_command(cmd):
         print("Error message saved to file " + error_filename)
         errorfile = open(error_filename, "w")
         errorfile.write("Command: " + cmd + "\n")
-        errorfile.writelines(sproc.stderr.readlines())
+        errorfile.writelines(sproc.stderr)
         errorfile.close()
         exit(1)
 
