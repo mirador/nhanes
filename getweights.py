@@ -150,11 +150,8 @@ def get_variable_type_and_range(short_name, full_name, table, datafile):
     return [var_type, var_range] 
 
 def write_xml_line(line):
-    ascii_line = ''.join(char for char in line if ord(char) < 128)
-    if len(ascii_line) < len(line):
-        print("  Warning: non-ASCII character found in line: '" + str(line.encode('ascii', 'ignore')) + "'")
-    xml_file.write(ascii_line + '\n')
-    xml_strings.append(ascii_line + '\n')
+    xml_file.write(line + '\n')
+    xml_strings.append(line + '\n')
 
 def get_component_weights(component, year, parser):
     request_url = "http://wwwn.cdc.gov/nchs/nhanes/search/datapage.aspx?Component=" + component + "&CycleBeginYear=" + year
@@ -208,7 +205,7 @@ def get_component_weights(component, year, parser):
                 if header == None: continue
             
                 header_table_name = header.find("h3")            
-                table_name = header_table_name.contents[0].strip().replace("&", "and").encode('ascii', 'ignore')
+                table_name = header_table_name.contents[0].strip().replace("&", "and")
             
                 header_data_file = header.find("h4")            
                 data_file = header_data_file.contents[0].split(":")[1].strip()
@@ -321,7 +318,7 @@ for component in data_components:
 xml_file = codecs.open(xml_filename, "w", "utf-8")
 xml_strings = []
 
-write_xml_line('<?xml version="1.0"?>')
+write_xml_line('<?xml version="1.0" encoding="utf-8" ?>')
 write_xml_line('<data name="Weights">')
             
 if sample_xml_lines:            

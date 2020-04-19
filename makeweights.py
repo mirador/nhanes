@@ -9,11 +9,8 @@ import sys, os, csv, codecs
 from xml.dom.minidom import parseString
 
 def write_xml_line(line):
-    ascii_line = ''.join(char for char in line if ord(char) < 128)
-    if len(ascii_line) < len(line):
-        print("  Warning: non-ASCII character found in line: '" + line.encode('ascii', 'ignore') + "'")
-    xml_file.write(ascii_line + '\n')
-    xml_strings.append(ascii_line + '\n')
+    xml_file.write(line + '\n')
+    xml_strings.append(line + '\n')
 
 out_folder = sys.argv[1]
 list_file = sys.argv[2]
@@ -184,7 +181,7 @@ for var in weights_files:
 xml_file = codecs.open(out_folder + "/" + xml_file, "w", "utf-8")
 xml_strings = []
 
-write_xml_line('<?xml version="1.0"?>')
+write_xml_line('<?xml version="1.0" encoding="utf-8" ?>')
 write_xml_line('<data name="Weights">')
             
 if sample_xml_lines:            

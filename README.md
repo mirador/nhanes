@@ -58,7 +58,7 @@ python makedataset.py 1999-2000
 **3)** Finalize dataset, by deleting temporary files and adding a Mirador configuration file. Once finalized, it cannot be used for merging (see below), because the merging scripts use temporary files that are removed by this step. The contents of the dataset folder are ready to load from Mirador:
 
 ```bash
-python finalizedataset.py 1999-2000
+python finaldataset.py 1999-2000
 ```
 
 **4)** Once several consecutive cycles have been made, one can create an aggregated dataset, by merging all the cycles encompassed by the specified interval:
@@ -70,8 +70,16 @@ python mergedatasets.py 1999-2010
 As mentioned above, this has to be done before finalizing the individual cycles. If the merging operation has to be redone several times, once can add the `-keep` parameter when finalizing the datasets:
 
 ```bash
-python finalizedataset.py 1999-2000 -keep
+python finaldataset.py 1999-2000 -keep
 ```
+
+**5)** A conveniency bash script is included to run all previous steps for a given year range:
+
+```bash
+makeall.sh 1999 2018
+```
+
+This will create all the datasets for all the cycles between years 1999 and 2018, as well as the aggregated dataset 1999-2018. All datasets fill be finalized after running this script.
 
 ### ADDING COMPOSITE VARIABLES
 
@@ -157,6 +165,8 @@ python makegroups.py data/mirador/1999-2000 demo.xml exam.xml lab.xml question.x
 ```bash
 python checkdata.py data/mirador/1999-2000 demo.xml lab.xml exam.xml question.xml weights.xml data.tsv
 ```
+
+Up to here, the steps concern creating a single cycle dataset. Once several consecutive datasets have been generated, they can be aggregated with the following steps:
 
 **9)** Merge metadata from different cycles (and each step updates weights.list):
 

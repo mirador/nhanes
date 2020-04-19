@@ -71,11 +71,8 @@ def get_variables(xml, var_names, var_types, var_ranges, var_files, var_weights,
         var_weights[vname] = vweight;
 
 def write_xml_line(line):
-    ascii_line = ''.join(char for char in line if ord(char) < 128)
-    if len(ascii_line) < len(line):
-        print("  Warning: Non-ASCII character found in line: '" + line.encode('ascii', 'ignore') + "'")
-    xml_file.write(ascii_line + '\n')
-    xml_strings.append(ascii_line + '\n')
+    xml_file.write(line + '\n')
+    xml_strings.append(line + '\n')
 
 def add_range(range0, range1, typ):
     merged = []
@@ -361,7 +358,7 @@ xml_filename = os.path.join(out_folder, meta_file)
 xml_file = codecs.open(xml_filename, "w", "utf-8")
 xml_strings = []
 
-write_xml_line('<?xml version="1.0"?>')
+write_xml_line('<?xml version="1.0" encoding="utf-8" ?>')
 write_xml_line('<data name="' + data_component + '">')
 
 for tab in tables:

@@ -171,11 +171,8 @@ def get_variable_type_and_range(short_name, full_name, table, datafile):
     return [var_type, var_range] 
 
 def write_xml_line(line):
-    ascii_line = ''.join(char for char in line if ord(char) < 128)
-    if len(ascii_line) < len(line):
-        print("  Warning: non-ASCII character found in line: '" + str(line.encode('ascii', 'ignore')) + "'")
-    xml_file.write(ascii_line + '\n')
-    xml_strings.append(ascii_line + '\n')
+    xml_file.write(line + '\n')
+    xml_strings.append(line + '\n')
 
 def strip_units(name):
     # Regular expression sear to identify a substring of the form
@@ -260,7 +257,7 @@ html_soup = BeautifulSoup(html_doc.text, html_parser)
 xml_file = codecs.open(xml_filename, "w", "utf-8")
 xml_strings = []
 
-write_xml_line('<?xml version="1.0"?>')
+write_xml_line('<?xml version="1.0" encoding="utf-8" ?>')
 write_xml_line('<data name="' + data_component + '">')
 
 # Getting all the codebooks in listed in the datapage
@@ -291,7 +288,7 @@ for table in html_soup.find_all('table'):
             if header == None: continue
             
             header_table_name = header.find("h3")            
-            table_name = header_table_name.contents[0].strip().replace("&", "and").encode('ascii', 'ignore')
+            table_name = header_table_name.contents[0].strip().replace("&", "and")
             
             header_data_file = header.find("h4")            
             data_file = header_data_file.contents[0].split(":")[1].strip()

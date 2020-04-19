@@ -9,11 +9,8 @@ from xml.dom.minidom import parseString
 import xml.etree.ElementTree as ET
 
 def write_xml_line(line):
-    ascii_line = ''.join(char for char in line if ord(char) < 128)
-    if len(ascii_line) < len(line):
-        print("  Warning: non-ASCII character found in line: '" + str(line.encode('ascii', 'ignore')) + "'")
-    xml_file.write(ascii_line + '\n')
-    xml_strings.append(ascii_line + '\n')
+    xml_file.write(line + '\n')
+    xml_strings.append(line + '\n')
 
 def get_variable(xml):
     vname = ""
@@ -39,7 +36,7 @@ xml_filename = os.path.abspath(os.path.join(data_folder, groups_file))
 xml_file = codecs.open(xml_filename, "w", "utf-8")
 xml_strings = []
 
-write_xml_line('<?xml version="1.0"?>')
+write_xml_line('<?xml version="1.0" encoding="utf-8" ?>')
 
 print("Creating groups file...")
 write_xml_line('<data>')
@@ -47,16 +44,18 @@ for meta in in_metadata:
     xml_filename = os.path.abspath(os.path.join(data_folder, meta))  
     tree = ET.parse(xml_filename)
     root = tree.getroot()
-    write_xml_line(' <group name="' + root.attrib["name"] + '">')
+    print(root.attrib["name"], str(root.attrib["name"]))
+    write_xml_line(' <group name="' + str(root.attrib["name"]) + '">')
     for el in root:      
         if (el.tag == "table"):
-          if el.attrib["include"] != "yes": continue          
-          write_xml_line('  <table name="' + el.attrib["name"] + '">')
+          if el.attrib["include"] != "yes": continue
+          print(el.attrib["name"], str(el.attrib["name"]))     
+          write_xml_line('  <table name="' + str(el.attrib["name"]) + '">')
           for child in el: 
               if child.tag == "var":
                   if child.attrib["include"] == "yes":
                       [name, alias] = get_variable(child)
-                      write_xml_line('   <variable name="' + name + '"/>')
+                      write_xml_line('   <variable name="' + str(name) + '"/>')
           write_xml_line('  </table>')                      
     write_xml_line(' </group>')
 write_xml_line('</data>')    
