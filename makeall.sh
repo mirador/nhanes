@@ -11,7 +11,7 @@ do
   python makedataset.py $year0-$year1;
 done
 
-python mergedatasets.py $last_year-$last_year
+python mergedatasets.py $first_year-$last_year
 
 for (( year0=$first_year; year0<=$last_year1; year0+=2 ))
 do
@@ -19,4 +19,4 @@ do
   python finaldataset.py $year0-$year1;
 done
 
-python finaldataset.py $last_year-$last_year
+python finaldataset.py $first_year-$last_year
